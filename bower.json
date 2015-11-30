@@ -1,0 +1,18 @@
+{
+  "name": "melon-json-schema-form",
+  "description": "complex form generator using json-schema",
+  "main": "index.js",
+  "authors": [
+    "ludafa@outlook.com"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/react-melon/melon-json-schema-form",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
