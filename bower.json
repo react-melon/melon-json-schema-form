@@ -1,18 +1,25 @@
 {
   "name": "melon-json-schema-form",
-  "description": "complex form generator using json-schema",
-  "main": "index.js",
-  "authors": [
-    "ludafa@outlook.com"
-  ],
-  "license": "ISC",
-  "homepage": "https://github.com/react-melon/melon-json-schema-form",
-  "moduleType": [],
+  "version": "0.1.0",
+  "description": "melon json schema form",
+  "main": "src/index.js",
+  "license": "MIT",
+  "author": {
+    "name": "ludafa",
+    "email": "ludafa@outlook.com"
+  },
   "ignore": [
     "**/.*",
     "node_modules",
-    "bower_components",
+    "dep",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "melon": "~0.1.1",
+    "melon-json-schema-validator": "~0.1.2"
+  },
+  "devDependencies": {
+    "ace-builds": "git@github.com:ajaxorg/ace-builds.git#~1.2.2"
+  }
 }

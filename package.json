@@ -1,27 +1,35 @@
 {
-    "name": "melon-json-schema-form",
-    "version": "0.1.0",
-    "description": "complex form generator using json-schema",
-    "main": "index.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/react-melon/melon-json-schema-form.git"
-    },
-    "author": "ludafa@outlook.com",
-    "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/react-melon/melon-json-schema-form/issues"
-    },
-    "homepage": "https://github.com/react-melon/melon-json-schema-form#readme",
-    "edp": {
-        "wwwroot": "/",
-        "depDir": "dep",
-        "srcDir": "src",
-        "loaderAutoConfig": "js,htm,html,tpl,vm,phtml",
-        "loaderUrl": "http://s1.bdstatic.com/r/www/cache/ecom/esl/1-8-2/esl.js",
-        "dependencies": {}
-    }
+  "name": "melon-json-schema-form",
+  "version": "0.1.0",
+  "description": "melon json schema form",
+  "main": "src/index.js",
+  "scripts": {
+    "lint": "fecs src",
+    "build:amd": "sh tool/build-amd.sh"
+  },
+  "author": {
+    "name": "ludafa",
+    "email": "ludafa@outlook.com"
+  },
+  "edp": {
+    "wwwroot": "/",
+    "depDir": "dep",
+    "srcDir": "src",
+    "loaderAutoConfig": "js,htm,html,tpl,vm,phtml",
+    "loaderUrl": "http://s1.bdstatic.com/r/www/cache/ecom/esl/1-8-2/esl.js",
+    "dependencies": {}
+  },
+  "license": "MIT",
+  "directories": {
+    "doc": "doc",
+    "test": "test"
+  },
+  "devDependencies": {
+    "babel-core": "^6.2.1",
+    "babel-plugin-external-helpers-2": "^6.1.18",
+    "babel-plugin-syntax-object-rest-spread": "^6.1.18",
+    "babel-plugin-transform-object-rest-spread": "^6.1.18",
+    "babel-preset-es2015": "^6.1.18",
+    "babel-preset-react": "^6.1.18"
+  }
 }

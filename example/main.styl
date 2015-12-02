@@ -1,0 +1,42 @@
+@require 'nib'
+
+global-reset();
+
+@require '../dep/melon/dist/css/theme/default';
+@require '../dep/melon/dist/css/TextBox.styl';
+@require '../dep/melon/dist/css/Button.styl';
+@require '../dep/melon/dist/css/Validity.styl';
+@require '../dep/melon/dist/css/Title.styl';
+
+html, body
+    height: 100%
+    overflow: hidden
+
+body
+    display: flex
+
+#app
+    box-sizing: border-box
+    padding: 1em
+    width: 50%
+    overflow-y: auto
+
+#editors
+    display: flex
+    box-sizing: border-box
+    height: 100%
+    width: 50%
+    flex-direction: column
+
+    >h4
+        line-height: 2em
+
+    >div
+        flex-grow: 1
+
+.form-footer
+    margin-top: 1em
+
+.ui-field
+    margin: 2em 0 0
+
