@@ -3,30 +3,42 @@
  * @author leon(ludafa@outlook.com)
  */
 
-const React = require('react');
-const TextBox = require('melon/TextBox');
-const Title = require('melon/Title');
-const main = require('./factory');
+import React from 'react';
+import TextBox from 'melon/TextBox';
+import Title from 'melon/Title';
+import InputComponent from 'melon/InputComponent';
+import * as main from './factory';
 
-const NumberComponent = React.createClass({
+export default class NumberComponent extends InputComponent {
 
     render() {
 
-        const {schema, value, name, onChange} = this.props;
-        const {title} = schema;
+        const {
+            schema,
+            name,
+            variants = [],
+            ...rest
+        } = this.props;
+
+        const value = this.state.value;
+
+        variants.push('fluid');
 
         return (
             <div className="ui-field variant-number">
-                <Title level={4}>{title}</Title>
+                <Title level={4}>{schema.title}</Title>
                 <TextBox
+                    {...rest}
                     variants={['fluid']}
                     name={name}
-                    rules={schema}
+                    rules={{...schema, type: 'string'}}
                     numberic={true}
-                    value={value != null ? +value : ''}
-                    onChange={(e) => {
-                        onChange({
-                            value: e.value
+                    value={value ? +value : ''}
+                    onChange={({value}) => {
+                        super.onChange({
+                            type: 'change',
+                            target: this,
+                            value: value ? +value : ''
                         });
                     }} />
             </div>
@@ -34,8 +46,6 @@ const NumberComponent = React.createClass({
 
     }
 
-});
+}
 
 main.registerComponent('number', NumberComponent);
-
-module.exports = NumberComponent;

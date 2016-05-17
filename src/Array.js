@@ -3,23 +3,22 @@
  * @author leon(ludafa@outlook.com)
  */
 
-const factory = require('./factory');
-const React = require('react');
-const Title = require('melon/Title');
-const createInputComponent = require('melon/createInputComponent');
+import * as factory from './factory';
+import React, {PropTypes} from 'react';
+import Title from 'melon/Title';
+import InputComponent from 'melon/InputComponent';
 
-let ArrayComponent = React.createClass({
+export default class ArrayComponent extends InputComponent {
 
     renderArray(schema, value, pointer) {
 
         const {items, title} = schema;
-        const {onChange} = this.props;
 
         return (
             <section className="ui-field variant-array" rules={schema} key={pointer}>
                 <Title level={3}>{title}</Title>
                 {value.map((record, index) => {
-                    const {type} = items;
+                    const type = items.type;
                     const recordPointer = `${pointer}/${index}`;
                     const Field = factory.getComponent(type);
                     return (
@@ -28,8 +27,10 @@ let ArrayComponent = React.createClass({
                             name={index + ''}
                             value={record}
                             schema={items}
-                            onChange={(e) => {
-                                onChange({
+                            onChange={e => {
+                                super.onChange({
+                                    type: 'change',
+                                    target: this,
                                     value: value
                                         .slice(0, index)
                                         .concat(e.value)
@@ -41,18 +42,17 @@ let ArrayComponent = React.createClass({
             </section>
         );
 
-    },
+    }
 
     renderTuple(schema, value, pointer) {
 
         const {items, title} = schema;
-        const {onChange} = this.props;
 
         return (
             <section className="ui-field variant-tuple" rules={schema}>
                 <Title level={3}>{title}</Title>
                 {items.map((item, index) => {
-                    const {type} = item;
+                    const type = item.type;
                     const recordPointer = `${pointer}/${index}`;
                     const Field = factory.getComponent(type);
                     return (
@@ -61,8 +61,10 @@ let ArrayComponent = React.createClass({
                             schema={item}
                             value={value[index]}
                             name={index + ''}
-                            onChange={(e) => {
-                                onChange({
+                            onChange={e => {
+                                super.onChange({
+                                    type: 'change',
+                                    target: this,
                                     value: value
                                         .slice(0, index)
                                         .concat(e.value)
@@ -74,13 +76,14 @@ let ArrayComponent = React.createClass({
             </section>
         );
 
-    },
+    }
 
     render() {
 
-        const {schema, value, pointer} = this.props;
+        const {schema, pointer} = this.props;
+        const value = this.state.value;
 
-        const {items} = schema;
+        const items = schema.items;
 
         return Array.isArray(items)
             ? this.renderTuple(schema, value, pointer)
@@ -88,17 +91,19 @@ let ArrayComponent = React.createClass({
 
     }
 
-});
-
-const {PropTypes} = React;
+}
 
 ArrayComponent.propTypes = {
-    value: PropTypes.array
+    ...InputComponent.propTypes,
+    value: PropTypes.array,
+    defaultValue: PropTypes.array
 };
 
-ArrayComponent = createInputComponent.create(ArrayComponent);
+ArrayComponent.defaultProps = {
+    ...InputComponent.defaultProps,
+    value: [],
+    defaultValue: []
+};
 
 factory.registerComponent('array', ArrayComponent);
-
-module.exports = ArrayComponent;
 

@@ -16,10 +16,10 @@
     "tests"
   ],
   "dependencies": {
-    "melon": "~0.1.1",
+    "melon": "^0.2.20",
     "melon-json-schema-validator": "~0.1.2"
   },
   "devDependencies": {
-    "ace-builds": "git@github.com:ajaxorg/ace-builds.git#~1.2.2"
+    "ace-builds": "https://github.com/ajaxorg/ace-builds.git"
   }
 }

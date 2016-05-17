@@ -3,17 +3,11 @@
  * @author leon(ludafa@outlook.com)
  */
 
-const React = require('react');
-const Form = require('melon/Form');
-const validator = require('melon-json-schema-validator');
+import React, {Component} from 'react';
+import Form from 'melon/Form';
+import validator from 'melon-json-schema-validator';
 
-const JSONSchemaForm = React.createClass({
-
-    getDefaultProps() {
-        return {
-            validator
-        };
-    },
+export default class JSONSchemaForm extends Component {
 
     render() {
 
@@ -29,6 +23,8 @@ const JSONSchemaForm = React.createClass({
         );
     }
 
-});
+}
 
-module.exports = JSONSchemaForm;
+JSONSchemaForm.defaultProps = {
+    validator
+};
