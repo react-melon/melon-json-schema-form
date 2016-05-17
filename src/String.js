@@ -3,12 +3,12 @@
  * @author leon(ludafa@outlook.com)
  */
 
-const React = require('react');
-const TextBox = require('melon/TextBox');
-const Title = require('melon/Title');
-const factory = require('./factory');
+import React from 'react';
+import TextBox from 'melon/TextBox';
+import Title from 'melon/Title';
+import * as factory from './factory';
 
-let StringComponent = React.createClass({
+export default class StringComponent extends React.Component {
 
     render() {
 
@@ -25,17 +25,13 @@ let StringComponent = React.createClass({
                     name={name}
                     rules={schema}
                     value={value}
-                    onChange={(e) => {
-                        onChange(e);
-                    }} />
+                    onChange={onChange} />
             </div>
         );
 
     }
 
-});
-
-StringComponent = require('melon/createInputComponent').create(StringComponent);
+}
 
 factory.registerComponent('string', StringComponent);
 

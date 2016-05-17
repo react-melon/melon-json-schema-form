@@ -19,18 +19,18 @@ exports.output = path.resolve(__dirname, 'output');
 // var pageEntries = 'html,htm,phtml,tpl,vm';
 
 exports.getProcessors = function () {
-    var lessProcessor = new LessCompiler();
-    var cssProcessor = new CssCompressor();
-    var moduleProcessor = new ModuleCompiler({
-        bizId: 'melon-json-schema-form'
-    });
-    var jsProcessor = new JsCompressor();
+    // var lessProcessor = new LessCompiler();
+    // var cssProcessor = new CssCompressor();
+    // var moduleProcessor = new ModuleCompiler({
+    //     bizId: 'melon-json-schema-form'
+    // });
+    // var jsProcessor = new JsCompressor();
     var pathMapperProcessor = new PathMapper();
     var addCopyright = new AddCopyright();
 
-    var amdWrapper = new AmdWrapper({
-        files: ['src/**/*.js']
-    });
+    // var amdWrapper = new AmdWrapper({
+    //     files: ['src/**/*.js']
+    // });
 
     var babel = new BabelProcessor({
         files: ['src/**/*.js'],
@@ -38,26 +38,29 @@ exports.getProcessors = function () {
             compact: false,
             ast: false,
             presets: [
-                'es2015',
-                'react'
+                'es2015-loose',
+                'react',
+                'stage-1'
             ],
             plugins: [
-                'external-helpers-2',
-                'transform-object-rest-spread'
+                'external-helpers',
+                'transform-es2015-modules-umd',
+                'transform-es3-property-literals',
+                'transform-es3-member-expression-literals'
             ]
+        },
+        moduleId: '',
+        getModuleId: function (filename) {
+            return filename.replace('src/', '');
         }
     });
 
     return {
-        amd: [
+        'default': [
             babel,
-            amdWrapper,
-            moduleProcessor,
-            pathMapperProcessor
-        ],
-        release: [
-            lessProcessor, cssProcessor, moduleProcessor,
-            jsProcessor, pathMapperProcessor, addCopyright
+            // amdWrapper,
+            pathMapperProcessor,
+            addCopyright
         ]
     };
 };

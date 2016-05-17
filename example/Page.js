@@ -261,4 +261,4 @@ Page.propTypes = {
     initialState: PropTypes.any
 };
 
-export default Page;
+module.exports = Page;

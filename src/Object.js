@@ -3,24 +3,27 @@
  * @author leon(ludafa@outlook.com)
  */
 
-const React = require('react');
-const main = require('./factory');
-const {create} = require('melon/createInputComponent');
-const Title = require('melon/Title');
+import React, {PropTypes} from 'react';
+import * as main from './factory';
 
-let ObjectComponent = React.createClass({
+import InputComponent from 'melon/InputComponent';
+import Title from 'melon/Title';
+
+export default class ObjectComponent extends InputComponent {
 
     render() {
 
-        const {schema, value = {}, pointer, onChange} = this.props;
+        const {schema, pointer} = this.props;
         const {properties, title} = schema;
+
+        const value = this.state.value;
 
         return (
             <section data-pointer={pointer} className="ui-field variant-map">
                 <Title level={3}>{title}</Title>
-                {Object.keys(properties).map((name) => {
+                {Object.keys(properties).map(name => {
                     const subSchema = properties[name];
-                    const {type} = subSchema;
+                    const type = subSchema.type;
                     const Field = main.getComponent(type);
                     return (
                         <Field
@@ -28,8 +31,10 @@ let ObjectComponent = React.createClass({
                             value={value[name]}
                             key={`${pointer}/${name}`}
                             name={name}
-                            onChange={(e) => {
-                                onChange({
+                            onChange={e => {
+                                super.onChange({
+                                    type: 'change',
+                                    target: this,
                                     value: {
                                         ...value,
                                         [name]: e.value
@@ -42,10 +47,19 @@ let ObjectComponent = React.createClass({
         );
     }
 
-});
+}
 
-ObjectComponent = create(ObjectComponent);
+ObjectComponent.propTypes = {
+    ...InputComponent.propTypes,
+    value: PropTypes.object,
+    defaultValue: PropTypes.object
+};
+
+ObjectComponent.defaultProps = {
+    ...InputComponent.defaultProps,
+    value: {},
+    defaultValue: {}
+};
+
 
 main.registerComponent('object', ObjectComponent);
-
-module.exports = ObjectComponent;

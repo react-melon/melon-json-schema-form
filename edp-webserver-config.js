@@ -6,30 +6,17 @@
 /* globals home, redirect, content, empty, autocss, file, less, stylus, proxyNoneExists */
 
 
-exports.port = 8848;
+exports.port = 8858;
 exports.directoryIndexes = true;
 exports.documentRoot = __dirname;
 
 var babel = require('babel-core');
+const nib = require('nib');
+
+exports.stylus = require('stylus');
 
 exports.getLocations = function () {
     return [
-        {
-            location: /\/$/,
-            handler: home('index.html')
-        },
-        {
-            location: /^\/redirect-local/,
-            handler: redirect('redirect-target', false)
-        },
-        {
-            location: /^\/redirect-remote/,
-            handler: redirect('http://www.baidu.com', false)
-        },
-        {
-            location: /^\/redirect-target/,
-            handler: content('redirectd!')
-        },
         {
             location: '/empty',
             handler: empty()
@@ -51,7 +38,11 @@ exports.getLocations = function () {
             location: /\.styl($|\?)/,
             handler: [
                 file(),
-                stylus()
+                stylus({
+                    'use': nib(),
+                    'resolve url': true,
+                    'resolve url nocheck': true
+                })
             ]
         },
         {
@@ -69,13 +60,16 @@ exports.getLocations = function () {
                                     compact: false,
                                     ast: false,
                                     presets: [
-                                        'es2015',
-                                        'react'
+                                        'es2015', 'es2015-loose', 'react', 'stage-1'
                                     ],
                                     plugins: [
-                                        'external-helpers-2',
-                                        'transform-object-rest-spread'
-                                    ]
+                                        'transform-es3-property-literals',
+                                        'transform-es3-member-expression-literals'
+                                    ],
+                                    moduleId: '',
+                                    getModuleId: function (filename) {
+                                        return filename.replace('src/', '');
+                                    }
                                 }
                             )
                             .code;

@@ -3,7 +3,7 @@
  * @author leon(ludafa@outlook.com)
  */
 
-import React from 'react';
+import React, {PropTypes} from 'react';
 import ei from 'ei';
 
 class App extends React.Component {
@@ -29,8 +29,6 @@ class App extends React.Component {
 
 }
 
-let {PropTypes} = React;
-
 App.propTypes = {
     routes: PropTypes.array.isRequired
 };
@@ -39,4 +37,4 @@ App.childContextTypes = {
     app: PropTypes.object.isRequired
 };
 
-export default App;
+module.exports = App;
