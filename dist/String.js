@@ -40,7 +40,7 @@
             var value = _props.value;
             var pointer = _props.pointer;
             var name = _props.name;
-            var _onChange = _props.onChange;
+            var onChange = _props.onChange;
             var title = schema.title;
             var placeholder = schema.placeholder;
             var maxLength = schema.maxLength;
@@ -61,9 +61,7 @@
                     name: name,
                     rules: schema,
                     value: value,
-                    onChange: function onChange(e) {
-                        _onChange(e);
-                    } })
+                    onChange: onChange })
             );
         };
 

@@ -25,9 +25,7 @@ export default class StringComponent extends React.Component {
                     name={name}
                     rules={schema}
                     value={value}
-                    onChange={e => {
-                        onChange(e);
-                    }} />
+                    onChange={onChange} />
             </div>
         );
 
