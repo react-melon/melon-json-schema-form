@@ -3,29 +3,24 @@
  * @author leon(ludafa@outlook.com)
  */
 
-const React = require('react');
-const main = require('./factory');
+import React, {PropTypes, Component} from 'react';
+import * as factory from './factory';
 
-const Field = React.createClass({
+export default class Field extends Component {
 
     render() {
 
-        const {schema, value, name} = this.props;
-        const {type} = schema;
-        const AcutualComponent = main.getComponent(type);
+        const schema = this.props.schema;
+        const type = schema.type;
+        const AcutualComponent = factory.getComponent(type);
 
         return (
-            <AcutualComponent
-                name={name}
-                schema={schema}
-                value={value} />
+            <AcutualComponent {...this.props} />
         );
 
     }
 
-});
-
-const {PropTypes} = React;
+}
 
 Field.propTypes = {
     schema: PropTypes.object.isRequired,
@@ -35,5 +30,3 @@ Field.propTypes = {
 Field.defaultProps = {
     pointer: ''
 };
-
-module.exports = Field;

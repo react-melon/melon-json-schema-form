@@ -5,10 +5,10 @@
 
 const COMPONENT_POOL = {};
 
-exports.getComponent = function (type) {
+export function getComponent(type) {
     return COMPONENT_POOL[type];
-};
+}
 
-exports.registerComponent = function (type, Component) {
+export function registerComponent(type, Component) {
     COMPONENT_POOL[type] = Component;
-};
+}

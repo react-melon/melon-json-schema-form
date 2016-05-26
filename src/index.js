@@ -3,23 +3,22 @@
  * @author leon(ludafa@outlook.com)
  */
 
-require('./Array');
-require('./Object');
-require('./String');
-require('./Number');
+import Array from './Array';
+import Object from './Object';
+import String from './String';
+import Number from './Number';
+import Form from './Form';
+import Field from './Field';
 
-const factory = require('./factory');
+import * as factory from './factory';
 
-exports.createField = function (schema, value) {
 
-    const {type} = schema;
-    const Field = factory.getComponent(type);
-
-    return (
-        <Field schema={schema} value={value} />
-    );
-
+module.exports = {
+    Array,
+    Object,
+    String,
+    Number,
+    Form,
+    Field,
+    factory
 };
-
-exports.Form = require('./Form');
-exports.Field = require('./Field');
