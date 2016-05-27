@@ -3,28 +3,98 @@
  * @author leon(ludafa@outlook.com)
  */
 
-import React, {Component} from 'react';
+import React, {PropTypes, Children, cloneElement} from 'react';
 import Form from 'melon/Form';
-import validator from 'melon-json-schema-validator';
+import InputComponent from 'melon/InputComponent';
+import Validator from 'melon-json-schema-validator';
+import * as jp from './pointer';
 
-export default class JSONSchemaForm extends Component {
+const validator = new Validator({
+    jsonPointers: true
+});
 
-    render() {
+export default class JSONSchemaForm extends Form {
 
-        const {validator, children, ...rest} = this.props;
+    constructor(props, context) {
+        super(props, context);
+        this.state = {};
+    }
 
-        return (
-            <Form
-                {...rest}
-                validator={validator}
-                variants={['json-schema']}>
-                {children}
-            </Form>
+    isValidFormField(field) {
+
+        const value = field.getValue();
+        const {pointer, props} = field;
+        const {name, disabled} = props;
+
+        return name
+            && !disabled
+            && value != null
+            && pointer;
+
+    }
+
+    getData() {
+
+        const type = this.props.schema.type;
+
+        return this.fields.reduce(
+            function (data, field) {
+                jp.set(data, field.pointer, field.getValue());
+                return data;
+            },
+            type === 'array' ? [] : {}
         );
+
+    }
+
+    validate() {
+
+        const validity = this.checkValidity();
+
+        const states = validity.states;
+        const isValid = validity.isValid();
+
+        if (!isValid) {
+
+            const fields = this.fields;
+
+            states.forEach(function (state) {
+
+                for (let i = 0, len = fields.length; i < len; ++i) {
+
+                    const field = fields[i];
+
+                    if (field.pointer === state.dataPath && !field.props.customValidity) {
+                        field.setCustomValidity(state.message);
+                        break;
+                    }
+
+                }
+
+            });
+
+        }
+
+        return isValid;
+    }
+
+    checkValidity() {
+        const data = this.getData();
+        const validator = this.props.validator;
+        return validator.validate(data, this);
     }
 
 }
 
+JSONSchemaForm.displayName = 'JSONSchemaForm';
+
 JSONSchemaForm.defaultProps = {
     validator
 };
+
+JSONSchemaForm.propTypes = {
+    ...Form.propTypes,
+    schema: PropTypes.object.isRequired
+};
+
+JSONSchemaForm.childContextTypes = Form.childContextTypes;

@@ -16,8 +16,11 @@
     "tests"
   ],
   "dependencies": {
-    "melon": "^0.2.20",
-    "melon-json-schema-validator": "~0.1.2"
+    "melon": "^0.2.24",
+    "melon-json-schema-validator": "~0.1.2",
+    "lodash": "^4.13.1",
+    "ajv.bundle": "https://cdnjs.cloudflare.com/ajax/libs/ajv/4.0.6/ajv.bundle.js",
+    "ajv": "^4.0.0"
   },
   "devDependencies": {
     "ace-builds": "https://github.com/ajaxorg/ace-builds.git"

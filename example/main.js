@@ -3,7 +3,7 @@
  * @author leon(ludafa@outlook.com)
  */
 
-import u from 'underscore';
+import u from 'lodash';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Button from 'melon/Button';

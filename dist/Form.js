@@ -1,17 +1,17 @@
 /*! 2016 Baidu Inc. All Rights Reserved */
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-        define(['exports', 'react', 'melon/Form', 'melon-json-schema-validator', "./babelHelpers"], factory);
+        define(['exports', 'react', 'melon/Form', 'melon/InputComponent', 'melon-json-schema-validator', './pointer', "./babelHelpers"], factory);
     } else if (typeof exports !== "undefined") {
-        factory(exports, require('react'), require('melon/Form'), require('melon-json-schema-validator'), require("./babelHelpers"));
+        factory(exports, require('react'), require('melon/Form'), require('melon/InputComponent'), require('melon-json-schema-validator'), require('./pointer'), require("./babelHelpers"));
     } else {
         var mod = {
             exports: {}
         };
-        factory(mod.exports, global.react, global.Form, global.melonJsonSchemaValidator, global.babelHelpers);
+        factory(mod.exports, global.react, global.Form, global.InputComponent, global.melonJsonSchemaValidator, global.pointer, global.babelHelpers);
         global.Form = mod.exports;
     }
-})(this, function (exports, _react, _Form, _melonJsonSchemaValidator, babelHelpers) {
+})(this, function (exports, _react, _Form2, _InputComponent, _melonJsonSchemaValidator, _pointer, babelHelpers) {
     'use strict';
 
     Object.defineProperty(exports, "__esModule", {
@@ -20,41 +20,109 @@
 
     var _react2 = babelHelpers.interopRequireDefault(_react);
 
-    var _Form2 = babelHelpers.interopRequireDefault(_Form);
+    var _Form3 = babelHelpers.interopRequireDefault(_Form2);
+
+    var _InputComponent2 = babelHelpers.interopRequireDefault(_InputComponent);
 
     var _melonJsonSchemaValidator2 = babelHelpers.interopRequireDefault(_melonJsonSchemaValidator);
 
-    var JSONSchemaForm = function (_Component) {
-        babelHelpers.inherits(JSONSchemaForm, _Component);
+    var jp = babelHelpers.interopRequireWildcard(_pointer);
 
-        function JSONSchemaForm() {
+    /**
+     * @file melon json schema form
+     * @author leon(ludafa@outlook.com)
+     */
+
+    var validator = new _melonJsonSchemaValidator2['default']({
+        jsonPointers: true
+    });
+
+    var JSONSchemaForm = function (_Form) {
+        babelHelpers.inherits(JSONSchemaForm, _Form);
+
+        function JSONSchemaForm(props, context) {
             babelHelpers.classCallCheck(this, JSONSchemaForm);
-            return babelHelpers.possibleConstructorReturn(this, _Component.apply(this, arguments));
+
+            var _this = babelHelpers.possibleConstructorReturn(this, _Form.call(this, props, context));
+
+            _this.state = {};
+            return _this;
         }
 
-        JSONSchemaForm.prototype.render = function render() {
-            var _props = this.props;
-            var validator = _props.validator;
-            var children = _props.children;
-            var rest = babelHelpers.objectWithoutProperties(_props, ['validator', 'children']);
+        JSONSchemaForm.prototype.isValidFormField = function isValidFormField(field) {
+
+            var value = field.getValue();
+            var pointer = field.pointer;
+            var props = field.props;
+            var name = props.name;
+            var disabled = props.disabled;
 
 
-            return _react2['default'].createElement(
-                _Form2['default'],
-                babelHelpers['extends']({}, rest, {
-                    validator: validator,
-                    variants: ['json-schema'] }),
-                children
-            );
+            return name && !disabled && value != null && pointer;
+        };
+
+        JSONSchemaForm.prototype.getData = function getData() {
+
+            var type = this.props.schema.type;
+
+            return this.fields.reduce(function (data, field) {
+                jp.set(data, field.pointer, field.getValue());
+                return data;
+            }, type === 'array' ? [] : {});
+        };
+
+        JSONSchemaForm.prototype.validate = function validate() {
+            var _this2 = this;
+
+            var validity = this.checkValidity();
+
+            var states = validity.states;
+            var isValid = validity.isValid();
+
+            if (!isValid) {
+                (function () {
+
+                    var fields = _this2.fields;
+
+                    states.forEach(function (state) {
+
+                        for (var i = 0, len = fields.length; i < len; ++i) {
+
+                            var field = fields[i];
+
+                            if (field.pointer === state.dataPath && !field.props.customValidity) {
+                                field.setCustomValidity(state.message);
+                                break;
+                            }
+                        }
+                    });
+                })();
+            }
+
+            return isValid;
+        };
+
+        JSONSchemaForm.prototype.checkValidity = function checkValidity() {
+            var data = this.getData();
+            var validator = this.props.validator;
+            return validator.validate(data, this);
         };
 
         return JSONSchemaForm;
-    }(_react.Component);
+    }(_Form3['default']);
 
     exports['default'] = JSONSchemaForm;
 
 
+    JSONSchemaForm.displayName = 'JSONSchemaForm';
+
     JSONSchemaForm.defaultProps = {
-        validator: _melonJsonSchemaValidator2['default']
+        validator: validator
     };
+
+    JSONSchemaForm.propTypes = babelHelpers['extends']({}, _Form3['default'].propTypes, {
+        schema: _react.PropTypes.object.isRequired
+    });
+
+    JSONSchemaForm.childContextTypes = _Form3['default'].childContextTypes;
 });
