@@ -61,7 +61,7 @@
                             _InputComponent.prototype.onChange.call(_this2, {
                                 type: 'change',
                                 target: _this2,
-                                value: value.slice(0, index).concat(e.value).concat(value.slice(index + 1))
+                                value: _this2.state.value.slice(0, index).concat(e.value).concat(value.slice(index + 1))
                             });
                         } });
                 })

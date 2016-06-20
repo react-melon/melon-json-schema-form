@@ -69,7 +69,7 @@
                             _InputComponent.prototype.onChange.call(_this2, {
                                 type: 'change',
                                 target: _this2,
-                                value: babelHelpers['extends']({}, value, (_babelHelpers$extends = {}, _babelHelpers$extends[name] = e.value, _babelHelpers$extends))
+                                value: babelHelpers['extends']({}, _this2.state.value, (_babelHelpers$extends = {}, _babelHelpers$extends[name] = e.value, _babelHelpers$extends))
                             });
                         } });
                 })

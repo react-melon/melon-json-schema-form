@@ -36,7 +36,7 @@ export default class ObjectComponent extends InputComponent {
                                     type: 'change',
                                     target: this,
                                     value: {
-                                        ...value,
+                                        ...this.state.value,
                                         [name]: e.value
                                     }
                                 });

@@ -31,7 +31,7 @@ export default class ArrayComponent extends InputComponent {
                                 super.onChange({
                                     type: 'change',
                                     target: this,
-                                    value: value
+                                    value: this.state.value
                                         .slice(0, index)
                                         .concat(e.value)
                                         .concat(value.slice(index + 1))
