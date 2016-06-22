@@ -67,6 +67,10 @@
      */
     function set(obj, pointer, value) {
 
+        if (pointer == null) {
+            return;
+        }
+
         var tokens = Array.isArray(pointer) ? pointer : parse(pointer);
         var nextToken = tokens[0];
 
