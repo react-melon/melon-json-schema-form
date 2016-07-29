@@ -5,7 +5,7 @@
 
 import React, {PropTypes, Children, cloneElement} from 'react';
 import Form from 'melon/Form';
-import InputComponent from 'melon/InputComponent';
+import InputComponent from 'melon-core/InputComponent';
 import Validator from 'melon-json-schema-validator';
 import * as jp from './pointer';
 

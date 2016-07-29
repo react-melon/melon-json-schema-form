@@ -6,7 +6,7 @@
 import React from 'react';
 import TextBox from 'melon/TextBox';
 import Title from 'melon/Title';
-import InputComponent from 'melon/InputComponent';
+import InputComponent from 'melon-core/InputComponent';
 import * as main from './factory';
 
 export default class NumberComponent extends InputComponent {

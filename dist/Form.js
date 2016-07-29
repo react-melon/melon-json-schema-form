@@ -1,9 +1,9 @@
 /*! 2016 Baidu Inc. All Rights Reserved */
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-        define(['exports', 'react', 'melon/Form', 'melon/InputComponent', 'melon-json-schema-validator', './pointer', "./babelHelpers"], factory);
+        define(['exports', 'react', 'melon/Form', 'melon-core/InputComponent', 'melon-json-schema-validator', './pointer', "./babelHelpers"], factory);
     } else if (typeof exports !== "undefined") {
-        factory(exports, require('react'), require('melon/Form'), require('melon/InputComponent'), require('melon-json-schema-validator'), require('./pointer'), require("./babelHelpers"));
+        factory(exports, require('react'), require('melon/Form'), require('melon-core/InputComponent'), require('melon-json-schema-validator'), require('./pointer'), require("./babelHelpers"));
     } else {
         var mod = {
             exports: {}

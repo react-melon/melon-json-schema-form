@@ -6,7 +6,7 @@
 import React, {PropTypes} from 'react';
 import * as main from './factory';
 
-import InputComponent from 'melon/InputComponent';
+import InputComponent from 'melon-core/InputComponent';
 import Title from 'melon/Title';
 
 export default class ObjectComponent extends InputComponent {

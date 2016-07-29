@@ -6,7 +6,7 @@
 import * as factory from './factory';
 import React, {PropTypes} from 'react';
 import Title from 'melon/Title';
-import InputComponent from 'melon/InputComponent';
+import InputComponent from 'melon-core/InputComponent';
 
 export default class ArrayComponent extends InputComponent {
 
@@ -106,4 +106,3 @@ ArrayComponent.defaultProps = {
 };
 
 factory.registerComponent('array', ArrayComponent);
-
