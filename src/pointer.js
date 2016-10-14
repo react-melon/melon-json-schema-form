@@ -38,6 +38,10 @@ export function get(obj, pointer) {
  */
 export function set(obj, pointer, value) {
 
+    if (pointer == null) {
+        return;
+    }
+
     const tokens = Array.isArray(pointer) ? pointer : parse(pointer);
     let nextToken = tokens[0];
 

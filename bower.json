@@ -21,6 +21,7 @@
     "melon-json-schema-validator": "~0.1.2"
   },
   "devDependencies": {
-    "ace-builds": "https://github.com/ajaxorg/ace-builds.git"
+    "ace-builds": "https://github.com/ajaxorg/ace-builds.git",
+    "lodash": "^4.13.1"
   }
 }
