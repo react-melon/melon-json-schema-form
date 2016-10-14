@@ -3,57 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>melon json schema form example</title>
-    <link rel="stylesheet" href="/example/main.styl">
 </head>
 <body>
-
-<div id="app"></div>
-<div id="editors">
-    <h4>data</h4>
-    <div id="data-editor"></div>
-    <h4>schema</h4>
-    <div id="schema-editor"></div>
-    <h4>display schema</h4>
-    <div id="display-schema-editor"></div>
-</div>
-
-<script type="text/javascript" src="http://s1.bdstatic.com/r/www/cache/ecom/esl/2-1-4/esl.js"></script>
-<script src="/dep/ace-builds/src-min-noconflict/ace.js"></script>
-<script>
-require.config({
-    baseUrl: '/example/',
-    paths: {
-        'react': '../dep/react/react',
-        'react-motion': '../dep/react-motion/index',
-        'react-dom': '../dep/react/react-dom',
-        'es5-shim': '../dep/es5-shim/es5-shim',
-        'melon': '../dep/melon/dist',
-        'numen': '../dep/numen/dist',
-        'es6-promise': '../dep/es6-promise/promise',
-        'tv4': '../dep/tv4/tv4',
-        'ajv': '../dep/ajv.bundle/index',
-        'lodash': '../dep/lodash/dist/lodash.min'
-    },
-    packages: [{
-        name: 'ei',
-        location: '../dep/ei/dist',
-        main: 'main'
-    }, {
-        name: 'melon-json-schema-form',
-        location: '../src',
-        main: 'index'
-    }, {
-        name: 'melon-json-schema-validator',
-        location: '../dep/melon-json-schema-validator/dist',
-        main: 'index'
-    }],
-    waitSeconds: 2
-});
-
-require(['react', 'react-dom', 'main'], function (React, ReactDOM, main) {
-    main.init();
-});
-
-</script>
+<main id="app"></main>
+<!--@inject=inf.dll.js-->
+<!--@inject=hot.dll.js-->
 </body>
 </html>

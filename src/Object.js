@@ -6,60 +6,107 @@
 import React, {PropTypes} from 'react';
 import * as main from './factory';
 
-import InputComponent from 'melon/InputComponent';
+import InputComponent from 'melon-core/InputComponent';
 import Title from 'melon/Title';
 
-export default class ObjectComponent extends InputComponent {
+export default class ObjectField extends InputComponent {
+
+    constructor(...args) {
+        super(...args);
+        this.onFieldChange = this.onFieldChange.bind(this);
+    }
+
+    renderTitle(title) {
+
+        if (!title) {
+            return null;
+        }
+
+        return (
+            <legend>
+                <Title level={4} size="xxs">{title}</Title>
+            </legend>
+        );
+
+    }
+
+    onFieldChange(e) {
+
+        const {
+            target,
+            value
+        } = e;
+
+        this.onChange({
+            target: this,
+            value: {
+                ...this.state.value,
+                [target.props.name]: value
+            }
+        });
+
+    }
 
     render() {
 
-        const {schema, pointer} = this.props;
+        const {props, pointer} = this;
+        const {schema, level, style} = props;
         const {properties, title} = schema;
 
         const value = this.state.value;
 
         return (
-            <section data-pointer={pointer} className="ui-field variant-map">
-                <Title level={3}>{title}</Title>
-                {Object.keys(properties).map(name => {
-                    const subSchema = properties[name];
-                    const type = subSchema.type;
-                    const Field = main.getComponent(type);
-                    return (
-                        <Field
-                            schema={subSchema}
-                            value={value[name]}
-                            key={`${pointer}/${name}`}
-                            name={name}
-                            onChange={e => {
-                                super.onChange({
-                                    type: 'change',
-                                    target: this,
-                                    value: {
-                                        ...value,
-                                        [name]: e.value
-                                    }
-                                });
-                            }} />
-                    );
-                })}
-            </section>
+            <fieldset
+                data-pointer={pointer}
+                className="ui-field variant-map"
+                style={style}>
+                <header className="ui-field-title ui-field-object-title">
+                    {title}
+                </header>
+                <ul className="ui-field-content">
+                    {Object.keys(properties).map(name => {
+                        const subSchema = properties[name];
+                        const Field = main.getComponent(subSchema);
+                        if (!Field) {
+                            return null;
+                        }
+                        return (
+                            <li key={`${pointer}/${name}`}>
+                                <Field
+                                    schema={subSchema}
+                                    level={level + 1}
+                                    value={value[name]}
+                                    name={name}
+                                    onChange={this.onFieldChange} />
+                            </li>
+                        );
+                    })}
+                </ul>
+            </fieldset>
         );
     }
 
 }
 
-ObjectComponent.propTypes = {
+ObjectField.displayName = 'Object';
+
+ObjectField.propTypes = {
     ...InputComponent.propTypes,
     value: PropTypes.object,
     defaultValue: PropTypes.object
 };
 
-ObjectComponent.defaultProps = {
+ObjectField.defaultProps = {
     ...InputComponent.defaultProps,
     value: {},
     defaultValue: {}
 };
 
 
-main.registerComponent('object', ObjectComponent);
+main.registerComponent(function (schema) {
+
+    if (schema.type === 'object') {
+        return ObjectField;
+    }
+
+});

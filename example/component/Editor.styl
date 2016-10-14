@@ -1,0 +1,29 @@
+.ui-editor
+    display: flex;
+    box-sizing: border-box;
+    flex-flow: column nowrap;
+    height: 100%;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    margin-bottom: 10px;
+    overflow: hidden;
+
+    >h3
+        flex: 0 0 auto;
+        padding: 0.5rem
+        background-color #f7f7f7
+        border-top-right-radius: 3px;
+        border-top-left-radius: 3px;
+        border-bottom: 1px solid #ddd;
+
+    >div
+        flex: 1 1 auto;
+        overflow: hidden;
+        display: flex;
+
+        >.CodeMirror
+            flex: 1 1 100%;
+            height: auto;
+
+            .CodeMirror-line
+                line-height: 1.3

@@ -10,13 +10,11 @@ export default class Field extends Component {
 
     render() {
 
-        const schema = this.props.schema;
-        const type = schema.type;
-        const AcutualComponent = factory.getComponent(type);
+        const AcutualComponent = factory.getComponent(this.props.schema);
 
-        return (
-            <AcutualComponent {...this.props} />
-        );
+        return AcutualComponent
+            ? <AcutualComponent {...this.props} />
+            : null;
 
     }
 
@@ -24,9 +22,9 @@ export default class Field extends Component {
 
 Field.propTypes = {
     schema: PropTypes.object.isRequired,
-    pointer: PropTypes.string.isRequired
+    level: PropTypes.number.isRequired
 };
 
 Field.defaultProps = {
-    pointer: ''
+    level: 0
 };

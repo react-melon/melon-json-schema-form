@@ -1,0 +1,27 @@
+{
+  "address": [
+    "100876",
+    "北京",
+    "北京",
+    "西土城北路10号"
+  ],
+  "prices": [
+    {
+      "url": "http://www.baidu.com",
+      "type": "1",
+      "rate": 1,
+      "amount": 20
+    },
+    {
+      "url": "http://www.baidu.com",
+      "type": "1",
+      "rate": 42,
+      "amount": 20
+    }
+  ],
+  "user": {
+    "sex": "female",
+    "age": 18,
+    "name": "张三"
+  }
+}

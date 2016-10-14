@@ -3,22 +3,39 @@
  * @author leon(ludafa@outlook.com)
  */
 
-import Array from './Array';
-import Object from './Object';
-import String from './String';
-import Number from './Number';
 import Form from './Form';
 import Field from './Field';
 
-import * as factory from './factory';
+import ObjectField from './Object';
+import Boolean from './Boolean';
+import Range from './number/Range';
+import Number from './number/Number';
+import Color from './string/Color';
+import DateField from './string/Date';
+import EnumText from './string/EnumText';
+import Image from './string/Image';
+import Text from './string/Text';
+import CheckBox from './array/CheckBox';
+import Tuple from './array/Tuple';
+import VariableArray from './array/VariableArray';
 
+export * from './factory';
 
-module.exports = {
-    Array,
-    Object,
-    String,
-    Number,
+export {
     Form,
     Field,
-    factory
+    DateField as Date,
+    ObjectField as Object,
+    Boolean,
+    Range,
+    Number,
+    EnumText,
+    Color,
+    Image,
+    Text,
+    CheckBox,
+    Tuple,
+    VariableArray
 };
+
+// export default from './Form';

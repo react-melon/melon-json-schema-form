@@ -1,0 +1,120 @@
+{
+  "type": "object",
+  "required": [
+    "user"
+  ],
+  "properties": {
+    "user": {
+      "type": "object",
+      "title": "123",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "姓名",
+          "description": "test",
+          "default": "张三"
+        },
+        "age": {
+          "type": "number",
+          "title": "年龄",
+          "default": 18
+        },
+        "sex": {
+          "title": "性别",
+          "type": "string",
+          "enum": [
+            "male",
+            "female"
+          ],
+          "enumNames": [
+            "男",
+            "女"
+          ],
+          "default": "male"
+        }
+      },
+      "required": [
+        "name",
+        "age"
+      ]
+    },
+    "prices": {
+      "title": "奖品设置",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "title": "图片",
+            "type": "string",
+            "pattern": "^http://",
+            "default": "http://www.baidu.com"
+          },
+          "type": {
+            "title": "类型",
+            "type": "string",
+            "enum": [
+              "1",
+              "2",
+              "33"
+            ],
+            "enumNames": [
+              "权益商品",
+              "钱包优惠券",
+              "Uber优惠券"
+            ],
+            "default": "1"
+          },
+          "rate": {
+            "title": "中奖概率",
+            "type": "number",
+            "default": 1,
+            "max": 100,
+            "min": 1
+          },
+          "amount": {
+            "title": "奖品数量",
+            "type": "integer",
+            "default": 20
+          }
+        },
+        "required": [
+          "url",
+          "rate",
+          "amount"
+        ]
+      },
+      "uniqueItems": true,
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "address": {
+      "title": "地址",
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": [
+        {
+          "title": "邮编",
+          "type": "string",
+          "default": "100876"
+        },
+        {
+          "title": "省",
+          "type": "string",
+          "default": "北京"
+        },
+        {
+          "title": "市",
+          "type": "string",
+          "default": "北京"
+        },
+        {
+          "title": "详细地址",
+          "type": "string",
+          "default": "西土城北路10号"
+        }
+      ]
+    }
+  }
+}

@@ -3,22 +3,20 @@
  * @author leon(ludafa@outlook.com)
  */
 
-import React, {PropTypes, Children, cloneElement} from 'react';
-import Form from 'melon/Form';
-import InputComponent from 'melon/InputComponent';
+import {PropTypes} from 'react';
+import Form from 'melon-core/Form';
 import Validator from 'melon-json-schema-validator';
 import * as jp from './pointer';
+import ReactDOM from 'react-dom';
 
 const validator = new Validator({
-    jsonPointers: true
+    jsonPointers: true,
+    allErrors: true
 });
 
-export default class JSONSchemaForm extends Form {
+validator.addFormat('color', /^#[0-9a-f]{6}$/i);
 
-    constructor(props, context) {
-        super(props, context);
-        this.state = {};
-    }
+export default class JSONSchemaForm extends Form {
 
     isValidFormField(field) {
 
@@ -37,7 +35,7 @@ export default class JSONSchemaForm extends Form {
 
         const type = this.props.schema.type;
 
-        return this.fields.reduce(
+        return this.fields.reduceRight(
             function (data, field) {
                 jp.set(data, field.pointer, field.getValue());
                 return data;
@@ -49,39 +47,42 @@ export default class JSONSchemaForm extends Form {
 
     validate() {
 
-        const validity = this.checkValidity();
-
+        const data = this.getData();
+        const validity = this.checkValidity(data);
+        const fields = this.fields;
         const states = validity.states;
         const isValid = validity.isValid();
 
-        if (!isValid) {
+        const invalidFieldMap = states.reduce(function (map, state) {
+            map[state.dataPath] = state;
+            return map;
+        }, {});
 
-            const fields = this.fields;
+        let first = null;
 
-            states.forEach(function (state) {
+        for (let i = fields.length - 1; i >= 0; i--) {
+            const field = fields[i];
+            const state = invalidFieldMap[field.pointer];
 
-                for (let i = 0, len = fields.length; i < len; ++i) {
+            if (state) {
+                field.setCustomValidity(state.message);
+                first = field;
+            }
+            else {
+                field.setCustomValidity(null);
+            }
 
-                    const field = fields[i];
+        }
 
-                    if (field.pointer === state.dataPath && !field.props.customValidity) {
-                        field.setCustomValidity(state.message);
-                        break;
-                    }
-
-                }
-
-            });
-
+        if (first) {
+            ReactDOM.findDOMNode(first).scrollIntoView();
         }
 
         return isValid;
     }
 
-    checkValidity() {
-        const data = this.getData();
-        const validator = this.props.validator;
-        return validator.validate(data, this);
+    checkValidity(data) {
+        return this.props.validator.validate(data, this);
     }
 
 }

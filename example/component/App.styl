@@ -1,0 +1,41 @@
+.app
+    display: flex
+    height: 100%
+    align-items: stretch
+
+    >.editor-container
+        display: flex
+        flex-flow: column nowrap
+        align-items: stretch
+        flex: 1 1 60%
+
+        >.schema-editor
+            flex: 0 0 60%;
+            padding: 5px;
+            box-sizing: border-box;
+            overflow: hidden
+
+        >.wrapper
+            box-sizing: border-box;
+            padding: 0 5px 5px;
+            flex: 0 0 40%;
+            overflow: hidden
+            display: flex;
+            align-items: stretch;
+
+            >.ui-schema-editor,
+            >.data-editor
+                flex: 1 1 50%
+
+            >.data-editor
+                margin-left: 5px
+
+    >.form
+        flex: 0 0 32rem;
+        padding: 0 1.5rem 0 0.5rem;
+        box-sizing: border-box;
+        overflow-x: hidden;
+        overflow-y: auto;
+
+@require './Editor.styl'
+@require './SchemaForm.styl'
