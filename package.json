@@ -1,6 +1,6 @@
 {
   "name": "melon-json-schema-form",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "description": "melon json schema form",
   "main": "src/index.js",
   "scripts": {

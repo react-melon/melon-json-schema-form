@@ -1,6 +1,6 @@
 {
   "name": "melon-json-schema-form",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "description": "melon json schema form",
   "main": "src/index.js",
   "license": "MIT",
@@ -16,9 +16,9 @@
     "tests"
   ],
   "dependencies": {
-      "melon": "^0.3.4",
-      "melon-core": "^0.3.2",
-      "melon-json-schema-validator": "~0.1.2"
+    "melon": "^0.3.4",
+    "melon-core": "^0.3.2",
+    "melon-json-schema-validator": "~0.1.2"
   },
   "devDependencies": {
     "ace-builds": "https://github.com/ajaxorg/ace-builds.git"
