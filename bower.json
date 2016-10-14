@@ -2,7 +2,7 @@
   "name": "melon-json-schema-form",
   "version": "1.0.0",
   "description": "melon json schema form",
-  "main": "src/index.js",
+  "main": "lib/index.js",
   "license": "MIT",
   "author": {
     "name": "ludafa",

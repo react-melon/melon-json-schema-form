@@ -18,8 +18,10 @@ import Text from './string/Text';
 import CheckBox from './array/CheckBox';
 import Tuple from './array/Tuple';
 import VariableArray from './array/VariableArray';
+import resolveDefaults from './util/resolveDefaults';
 
 export * from './factory';
+
 
 export {
     Form,
@@ -35,7 +37,8 @@ export {
     Text,
     CheckBox,
     Tuple,
-    VariableArray
+    VariableArray,
+    resolveDefaults
 };
 
 // export default from './Form';
