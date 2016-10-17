@@ -19,6 +19,7 @@ import CheckBox from './array/CheckBox';
 import Tuple from './array/Tuple';
 import VariableArray from './array/VariableArray';
 import resolveDefaults from './util/resolveDefaults';
+import * as pointer from './pointer';
 
 export * from './factory';
 
@@ -38,7 +39,8 @@ export {
     CheckBox,
     Tuple,
     VariableArray,
-    resolveDefaults
+    resolveDefaults,
+    pointer
 };
 
 // export default from './Form';
