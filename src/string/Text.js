@@ -11,6 +11,41 @@ import shallowEqual from 'melon-core/util/shallowEqual';
 
 export default class TextField extends Component {
 
+    constructor(...args) {
+        super(...args);
+        this.onKeyDown = this.onKeyDown.bind(this);
+        this.onBlur = this.onBlur.bind(this);
+    }
+
+    onKeyDown(e) {
+
+        const {onChange, value} = this.props;
+
+        const nextValue = e.target.value;
+
+        if (e.keyCode === 13 && nextValue !== value) {
+            onChange({
+                type: 'change',
+                target: this.refs.textbox,
+                value: nextValue || value
+            });
+        }
+    }
+
+    onBlur(e) {
+
+        const {value, onChange} = this.props;
+        const target = e.target;
+        const currentValue = target.getValue();
+
+        onChange({
+            type: 'change',
+            target,
+            value: currentValue || value
+        });
+
+    }
+
     shouldComponentUpdate(nextProps) {
         return !shallowEqual(nextProps, this.props);
     }
@@ -20,7 +55,6 @@ export default class TextField extends Component {
         const {
             schema,
             value,
-            onChange,
             name
         } = this.props;
 
@@ -39,6 +73,7 @@ export default class TextField extends Component {
             <div className="ui-field ui-field-string variant-string">
                 <header className={titleClassName}>{title}</header>
                 <TextBox
+                    ref="textbox"
                     size="xxs"
                     variants={['fluid']}
                     multiline={maxLength && maxLength >= 120}
@@ -47,7 +82,8 @@ export default class TextField extends Component {
                     rules={schema}
                     value={value}
                     defaultValue={schema.default}
-                    onChange={onChange} />
+                    onKeyDown={this.onKeyDown}
+                    onBlur={this.onBlur} />
             </div>
         );
 

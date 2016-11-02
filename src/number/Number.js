@@ -11,8 +11,73 @@ import shallowEqual from 'melon-core/util/shallowEqual';
 
 export default class NumberComponent extends Component {
 
+    constructor(...args) {
+        super(...args);
+        this.onKeyDown = this.onKeyDown.bind(this);
+        this.onBlur = this.onBlur.bind(this);
+    }
+
     shouldComponentUpdate(nextProps) {
         return !shallowEqual(nextProps, this.props);
+    }
+
+    onKeyDown(e) {
+
+        const {value, onChange} = this.props;
+
+        const {
+            keyCode,
+            shiftKey,
+            altKey,
+            metaKey
+        } = e;
+
+        let currentValue = e.target.value;
+
+        // 如果是上或下，那么要做额外数字处理
+        // shift 是 10x，alt 是 0.1x 其他就是 1x
+        if (keyCode === 38 || keyCode === 40) {
+
+            e.preventDefault();
+
+            currentValue = (+currentValue)
+                + (keyCode === 38 ? 1 : -1)
+                * (metaKey ? 100 : (shiftKey ? 10 : (altKey ? 0.1 : 1)));
+
+            onChange({
+                type: 'change',
+                target: this.refs.textbox,
+                value: +currentValue.toFixed(3)
+            });
+
+            return;
+        }
+
+        // 如果是回车，相当于触发了一个 blur
+        if (keyCode === 13 && currentValue !== value) {
+            onChange({
+                type: 'change',
+                target: this.refs.textbox,
+                value: currentValue === '' ? value : +currentValue
+            });
+        }
+
+    }
+
+    onBlur(e) {
+
+        const {onChange, value} = this.props;
+        const target = e.target;
+        const currentValue = target.getValue();
+
+        if (currentValue !== value) {
+            onChange({
+                type: 'change',
+                target,
+                value: currentValue === '' ? value : currentValue
+            });
+        }
+
     }
 
     render() {
@@ -20,14 +85,14 @@ export default class NumberComponent extends Component {
         const {
             schema,
             name,
-            onChange,
             ...rest
         } = this.props;
 
         const {
-            divisibleBy = 1,
+            divisibleBy,
             max = Infinity,
-            min = -Infinity
+            min = -Infinity,
+            type
         } = schema;
 
         const value = this.props.value;
@@ -35,13 +100,16 @@ export default class NumberComponent extends Component {
             'ui-field-title',
             'variant-level-4'
         );
+
         return (
             <div className="ui-field ui-field-number variant-number">
                 <header className={titleClassName}>{schema.title}</header>
                 <NumberBox
                     {...rest}
+                    onChange={null}
+                    ref="textbox"
                     size="xxs"
-                    step={divisibleBy}
+                    step={divisibleBy || type === 'integer' ? 1 : 0.001}
                     min={min}
                     max={max}
                     variants={['fluid']}
@@ -49,7 +117,9 @@ export default class NumberComponent extends Component {
                     rules={schema}
                     value={value}
                     defaultValue={schema.default}
-                    onChange={onChange} />
+                    validateEvents={['blur']}
+                    onKeyDown={this.onKeyDown}
+                    onBlur={this.onBlur} />
             </div>
         );
 
