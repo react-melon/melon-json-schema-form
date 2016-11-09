@@ -3,7 +3,7 @@
  * @author leon <ludafa@outlook.com>
  */
 
-import React, {Component} from 'react';
+import React, {PropTypes, Component} from 'react';
 import Slider from 'melon/Slider';
 import {registerComponent} from '../factory';
 import {createClassName} from 'melon-core/classname/classname';
@@ -56,6 +56,7 @@ export default class Range extends Component {
 }
 
 Range.propTypes = {
+    onChange: PropTypes.func.isRequired
 };
 
 registerComponent(function (schema) {

@@ -54,7 +54,7 @@ ColorField.displayName = 'ColorField';
 ColorField.propTypes = {
     schema: PropTypes.object.isRequired,
     value: PropTypes.string,
-    onChange: PropTypes.func
+    onChange: PropTypes.func.isRequired
 };
 
 registerComponent(function (schema) {

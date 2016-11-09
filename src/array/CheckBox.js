@@ -57,7 +57,8 @@ export default class ArrayCheckBox extends Component {
 
 
 ArrayCheckBox.propTypes = {
-    schema: PropTypes.object.isRequired
+    schema: PropTypes.object.isRequired,
+    onChange: PropTypes.func.isRequired
 };
 
 registerComponent(function (schema) {

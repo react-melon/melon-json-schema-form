@@ -58,7 +58,7 @@ export default class DateField extends Component {
 DateField.propTypes = {
     schema: PropTypes.object.isRequired,
     value: PropTypes.string,
-    onChange: PropTypes.func
+    onChange: PropTypes.func.isRequired
 };
 
 registerComponent(function (schema) {

@@ -42,5 +42,3 @@ export {
     resolveDefaults,
     pointer
 };
-
-// export default from './Form';

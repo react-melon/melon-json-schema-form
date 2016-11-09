@@ -3,7 +3,7 @@
  * @author leon(ludafa@outlook.com)
  */
 
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 import {registerComponent} from '../factory';
 import {createClassName} from 'melon-core/classname/classname';
 import NumberBox from './NumberBox';
@@ -128,6 +128,10 @@ export default class NumberComponent extends Component {
 }
 
 NumberComponent.displayName = 'Number';
+
+NumberComponent.propTypes = {
+    onChange: PropTypes.func.isRequired
+};
 
 registerComponent(function (schema) {
 

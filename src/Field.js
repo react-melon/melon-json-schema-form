@@ -21,10 +21,12 @@ export default class Field extends Component {
 }
 
 Field.propTypes = {
+    uiSchema: PropTypes.object.isRequired,
     schema: PropTypes.object.isRequired,
     level: PropTypes.number.isRequired
 };
 
 Field.defaultProps = {
-    level: 0
+    level: 0,
+    uiSchema: {}
 };

@@ -157,7 +157,8 @@ ArrayTuple.propTypes = {
     ...InputComponent.propTypes,
     value: PropTypes.array,
     schema: PropTypes.object,
-    level: PropTypes.number
+    level: PropTypes.number,
+    onChange: PropTypes.func.isRequired
 };
 
 ArrayTuple.defaultProps = {

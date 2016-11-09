@@ -320,6 +320,7 @@ VariableArray.displayName = 'VariableArray';
 
 VariableArray.defaultProps = {
     ...InputComponent.defaultProps,
+    onChange: PropTypes.func.isRequired,
     value: []
 };
 

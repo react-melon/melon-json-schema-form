@@ -3,11 +3,13 @@
  * @author leon(ludafa@outlook.com)
  */
 
-import {PropTypes} from 'react';
+import React, {PropTypes} from 'react';
 import Form from 'melon-core/Form';
 import Validator from 'melon-json-schema-validator';
 import * as jp from './pointer';
 import ReactDOM from 'react-dom';
+import Field from './Field';
+import {getOrderedKeys} from './util/getOrderedKeys';
 
 const validator = new Validator({
     jsonPointers: true,
@@ -17,6 +19,12 @@ const validator = new Validator({
 validator.addFormat('color', /^#[0-9a-f]{6}$/i);
 
 export default class JSONSchemaForm extends Form {
+
+    constructor(...args) {
+        super(...args);
+        this.onSubmit = this.onSubmit.bind(this);
+        this.onFieldChange = this.onFieldChange.bind(this);
+    }
 
     isValidFormField(field) {
 
@@ -85,17 +93,79 @@ export default class JSONSchemaForm extends Form {
         return this.props.validator.validate(data, this);
     }
 
+    onSubmit(e) {
+
+        const {
+            noValidate,
+            onSubmit
+        } = this.props;
+
+        if (!noValidate) {
+            if (!this.validate()) {
+                e.preventDefault();
+                return;
+            }
+        }
+
+        if (onSubmit) {
+            e.data = this.getData();
+            onSubmit(e);
+        }
+    }
+
+    onFieldChange(e) {
+        const onFieldChange = this.props.onFieldChange;
+        if (onFieldChange) {
+            onFieldChange(e);
+        }
+    }
+
+    render() {
+
+        const {
+            schema,
+            uiSchema = {},
+            value = {},
+            renderForm,
+            ...rest
+        } = this.props;
+
+        const properties = schema.properties;
+
+        const fields = getOrderedKeys(schema.properties, uiSchema['@order'])
+            .map(name => (
+                <Field
+                    name={name}
+                    key={name}
+                    schema={properties[name]}
+                    uiSchema={uiSchema[name]}
+                    value={value[name]}
+                    onChange={this.onFieldChange} />
+            ));
+
+        return (
+            <form {...rest} onSubmit={this.onSubmit}>
+                {renderForm(this.props, fields)}
+            </form>
+        );
+
+    }
+
 }
 
 JSONSchemaForm.displayName = 'JSONSchemaForm';
 
 JSONSchemaForm.defaultProps = {
-    validator
+    validator,
+    renderForm(props, fields = []) {
+        return fields.concat(props.children);
+    }
 };
 
 JSONSchemaForm.propTypes = {
     ...Form.propTypes,
-    schema: PropTypes.object.isRequired
+    schema: PropTypes.object.isRequired,
+    onFieldChange: PropTypes.func
 };
 
 JSONSchemaForm.childContextTypes = Form.childContextTypes;

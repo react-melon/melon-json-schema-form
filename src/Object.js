@@ -8,6 +8,7 @@ import * as main from './factory';
 
 import InputComponent from 'melon-core/InputComponent';
 import Title from 'melon/Title';
+import {getOrderedKeys} from './util/getOrderedKeys';
 
 export default class ObjectField extends InputComponent {
 
@@ -50,10 +51,29 @@ export default class ObjectField extends InputComponent {
     render() {
 
         const {props, pointer} = this;
-        const {schema, level, style} = props;
+        const {schema, level, style, uiSchema} = props;
         const {properties, title} = schema;
 
         const value = this.state.value;
+
+        const fields = getOrderedKeys(properties, uiSchema['@order'])
+            .map(name => {
+                const subSchema = properties[name];
+                const Field = main.getComponent(subSchema);
+                if (!Field) {
+                    return null;
+                }
+                return (
+                    <li key={`${pointer}/${name}`}>
+                        <Field
+                            schema={subSchema}
+                            level={level + 1}
+                            value={value[name]}
+                            name={name}
+                            onChange={this.onFieldChange} />
+                    </li>
+                );
+            });
 
         return (
             <fieldset
@@ -64,23 +84,7 @@ export default class ObjectField extends InputComponent {
                     {title}
                 </header>
                 <ul className="ui-field-content">
-                    {Object.keys(properties).map(name => {
-                        const subSchema = properties[name];
-                        const Field = main.getComponent(subSchema);
-                        if (!Field) {
-                            return null;
-                        }
-                        return (
-                            <li key={`${pointer}/${name}`}>
-                                <Field
-                                    schema={subSchema}
-                                    level={level + 1}
-                                    value={value[name]}
-                                    name={name}
-                                    onChange={this.onFieldChange} />
-                            </li>
-                        );
-                    })}
+                    {fields}
                 </ul>
             </fieldset>
         );
@@ -93,13 +97,16 @@ ObjectField.displayName = 'Object';
 ObjectField.propTypes = {
     ...InputComponent.propTypes,
     value: PropTypes.object,
-    defaultValue: PropTypes.object
+    defaultValue: PropTypes.object,
+    uiSchema: PropTypes.object.isRequired,
+    schema: PropTypes.object.isRequired
 };
 
 ObjectField.defaultProps = {
     ...InputComponent.defaultProps,
     value: {},
-    defaultValue: {}
+    defaultValue: {},
+    uiSchema: {}
 };
 
 

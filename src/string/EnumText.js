@@ -61,7 +61,7 @@ export default class EnumTextField extends Component {
 EnumTextField.propTypes = {
     schema: PropTypes.object.isRequired,
     value: PropTypes.string,
-    onChange: PropTypes.func
+    onChange: PropTypes.func.isRequired
 };
 
 registerComponent(function (schema) {
