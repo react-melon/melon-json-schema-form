@@ -25,8 +25,8 @@ export default class Range extends Component {
         } = this.props;
 
         const {
-            max,
-            min,
+            maximum,
+            minimun,
             title
         } = schema;
 
@@ -45,8 +45,8 @@ export default class Range extends Component {
                     rules={schema}
                     value={value}
                     defaultValue={schema.default}
-                    max={max}
-                    min={min}
+                    max={maximum}
+                    min={minimun}
                     onChange={onChange} />
             </div>
         );
