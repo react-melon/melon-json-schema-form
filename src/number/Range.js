@@ -63,13 +63,13 @@ registerComponent(function (schema) {
 
     const {
         type,
-        max,
-        min
+        maximum,
+        minimun
     } = schema;
 
     if (
         (type === 'number' || type === 'integer')
-        && max != null && min != null
+        && maximum != null && minimun != null
     ) {
         return Range;
     }
