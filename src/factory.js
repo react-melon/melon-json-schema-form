@@ -7,7 +7,7 @@ const providers = [];
 
 export function getComponent(schema) {
 
-    for (let i = 0, len = providers.length; i < len; i++) {
+    for (let i = providers.length - 1; i >= 0; i--) {
         const provider = providers[i];
         const Component = provider(schema);
         if (Component) {

@@ -8,16 +8,19 @@ import Field from './Field';
 
 import ObjectField from './Object';
 import Boolean from './Boolean';
-import Range from './number/Range';
 import Number from './number/Number';
+import Range from './number/Range';
+
+import Text from './string/Text';
 import Color from './string/Color';
 import DateField from './string/Date';
 import EnumText from './string/EnumText';
 import Image from './string/Image';
-import Text from './string/Text';
-import CheckBox from './array/CheckBox';
-import Tuple from './array/Tuple';
+
 import VariableArray from './array/VariableArray';
+import Tuple from './array/Tuple';
+import CheckBox from './array/CheckBox';
+
 import resolveDefaults from './util/resolveDefaults';
 import * as pointer from './pointer';
 
