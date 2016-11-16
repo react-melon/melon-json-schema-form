@@ -6,7 +6,7 @@
 import React, {Component, PropTypes} from 'react';
 import Toggle from 'melon/Toggle';
 import Title from 'melon/Title';
-import * as factory from './factory';
+import * as factory from '../factory';
 import shallowEqual from 'melon-core/util/shallowEqual';
 
 export const type = 'Boolean';
@@ -54,7 +54,7 @@ BooleanField.propTypes = {
     value: PropTypes.bool
 };
 
-factory.registerComponent(function (schema) {
+factory.registerWidget(function (schema) {
 
     if (schema.type === 'boolean') {
         return BooleanField;

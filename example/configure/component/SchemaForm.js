@@ -8,15 +8,6 @@ import {Form} from '../../src/index';
 import Button from 'melon/Button';
 
 const UI_SCHMEA = {
-    '@order': [
-        'position',
-        'title',
-        'subTitle',
-        '*'
-    ],
-    'position': {
-        '@order': ['left', 'top']
-    }
 };
 
 export default class SchemaForm extends Component {

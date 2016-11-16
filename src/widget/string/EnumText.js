@@ -5,9 +5,10 @@
 
 import React, {Component, PropTypes} from 'react';
 import Select from 'melon/Select';
-import {registerComponent} from '../factory';
 import {createClassName} from 'melon-core/classname/classname';
 import shallowEqual from 'melon-core/util/shallowEqual';
+
+import {registerWidget} from '../../factory';
 
 export default class EnumTextField extends Component {
 
@@ -44,7 +45,12 @@ export default class EnumTextField extends Component {
                     rules={schema}
                     value={value}
                     defaultValue={schema.default}
-                    onChange={onChange}>
+                    onChange={e => {
+                        onChange({
+                            ...e,
+                            pointer: e.target.pointer
+                        });
+                    }}>
                     {schema.enum.map((item, index) => (
                         <option key={item} value={item}>
                             {enumNames && enumNames[index] || item}
@@ -64,7 +70,7 @@ EnumTextField.propTypes = {
     onChange: PropTypes.func.isRequired
 };
 
-registerComponent(function (schema) {
+registerWidget(function (schema) {
 
     if (
         schema.type === 'string'

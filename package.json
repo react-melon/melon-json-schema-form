@@ -26,11 +26,14 @@
     "src": "src"
   },
   "dependencies": {
+    "lodash": "^4.17.0",
     "melon": "^0.3.9",
     "melon-calendar": "^1.0.1",
     "melon-colorpicker": "^1.0.6",
     "melon-core": "^0.3.4",
-    "melon-json-schema-validator": "^1.1.1"
+    "melon-json-schema-validator": "^1.1.1",
+    "redux": "^3.6.0",
+    "shallow-equal": "^1.0.0"
   },
   "devDependencies": {
     "babel-istanbul": "^0.11.0",
@@ -76,6 +79,7 @@
     "react-addons-test-utils": "^0.14.8",
     "react-addons-update": "^0.14.8",
     "react-hot-loader": "^1.3.0",
+    "redux-logger": "^2.7.4",
     "rimraf": "^2.5.4",
     "style-loader": "^0.13.1",
     "stylus": "^0.54.5",

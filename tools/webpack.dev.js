@@ -13,11 +13,18 @@ const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 
 const config = Object.assign({}, require('./webpack.common'), {
 
-    entry: [
-        'webpack-hot-middleware/client',
-        'webpack/hot/only-dev-server',
-        path.join(__dirname, '../example/main.js')
-    ],
+    entry: {
+        // configure: [
+        //     'webpack-hot-middleware/client',
+        //     'webpack/hot/only-dev-server',
+        //     path.join(__dirname, '../example/configure/main.js')
+        // ],
+        simple: [
+            'webpack-hot-middleware/client',
+            'webpack/hot/only-dev-server',
+            path.join(__dirname, '../example/simple/index.js')
+        ]
+    },
 
     module: {
         loaders: [{
@@ -67,12 +74,29 @@ const config = Object.assign({}, require('./webpack.common'), {
         }),
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
+        // new HtmlWebpackPlugin({
+        //     inject: true,
+        //     chunks: ['configure'],
+        //     templateContent: (function () {
+        //         return fs
+        //             .readFileSync(
+        //                 path.join(__dirname, '../example/configure/index.html'),
+        //                 'utf8'
+        //             )
+        //             .replace(/<!--@inject=([\w._-]+)-->/ig, function ($0, $1) {
+        //                 return `<script src="${$1}"></script>`;
+        //             });
+        //     })(),
+        //     filename: path.resolve(__dirname, '../asset/configure.html'),
+        //     alwaysWriteToDisk: true
+        // }),
         new HtmlWebpackPlugin({
             inject: true,
+            chunks: ['simple'],
             templateContent: (function () {
                 return fs
                     .readFileSync(
-                        path.join(__dirname, '../example/index.html'),
+                        path.join(__dirname, '../example/simple/index.html'),
                         'utf8'
                     )
                     .replace(/<!--@inject=([\w._-]+)-->/ig, function ($0, $1) {
@@ -81,6 +105,11 @@ const config = Object.assign({}, require('./webpack.common'), {
             })(),
             filename: path.resolve(__dirname, '../asset/index.html'),
             alwaysWriteToDisk: true
+        }),
+        new webpack.DefinePlugin({
+            'process.env': {
+                NODE_ENV: '"dev"'
+            }
         }),
         new HtmlWebpackHarddiskPlugin(),
         new webpack.IgnorePlugin(/regenerator|nodent|js\-beautify/, /ajv/),

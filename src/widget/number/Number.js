@@ -4,7 +4,7 @@
  */
 
 import React, {Component, PropTypes} from 'react';
-import {registerComponent} from '../factory';
+import {registerWidget} from '../../factory';
 import {createClassName} from 'melon-core/classname/classname';
 import NumberBox from './NumberBox';
 import shallowEqual from 'melon-core/util/shallowEqual';
@@ -33,6 +33,7 @@ export default class NumberComponent extends Component {
         } = e;
 
         let currentValue = e.target.value;
+        let textbox = this.refs.textbox;
 
         // 如果是上或下，那么要做额外数字处理
         // shift 是 10x，alt 是 0.1x 其他就是 1x
@@ -46,8 +47,9 @@ export default class NumberComponent extends Component {
 
             onChange({
                 type: 'change',
-                target: this.refs.textbox,
-                value: +currentValue.toFixed(3)
+                target: textbox,
+                value: +currentValue.toFixed(3),
+                pointer: textbox.pointer
             });
 
             return;
@@ -57,8 +59,9 @@ export default class NumberComponent extends Component {
         if (keyCode === 13 && currentValue !== value) {
             onChange({
                 type: 'change',
-                target: this.refs.textbox,
-                value: currentValue === '' ? value : +currentValue
+                target: textbox,
+                value: currentValue === '' ? value : +currentValue,
+                pointer: textbox.pointer
             });
         }
 
@@ -74,7 +77,8 @@ export default class NumberComponent extends Component {
             onChange({
                 type: 'change',
                 target,
-                value: currentValue === '' ? value : currentValue
+                value: currentValue === '' ? value : currentValue,
+                pointer: target.pointer
             });
         }
 
@@ -133,7 +137,7 @@ NumberComponent.propTypes = {
     onChange: PropTypes.func.isRequired
 };
 
-registerComponent(function (schema) {
+registerWidget(function (schema) {
 
     const type = schema.type;
 

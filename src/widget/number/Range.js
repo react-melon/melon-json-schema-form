@@ -1,0 +1,82 @@
+/**
+ * @file Range
+ * @author leon <ludafa@outlook.com>
+ */
+
+import React, {PropTypes, Component} from 'react';
+import Slider from 'melon/Slider';
+import {registerWidget} from '../../factory';
+import {createClassName} from 'melon-core/classname/classname';
+import shallowEqual from 'melon-core/util/shallowEqual';
+
+export default class Range extends Component {
+
+    shouldComponentUpdate(nextProps) {
+        return !shallowEqual(nextProps, this.props);
+    }
+
+    render() {
+
+        const {
+            schema,
+            value,
+            onChange,
+            name
+        } = this.props;
+
+        const {
+            maximum,
+            minimum,
+            title
+        } = schema;
+
+        const titleClassName = createClassName(
+            'ui-field-title',
+            'variant-level-4'
+        );
+
+        return (
+            <div className="ui-field ui-field-string variant-string">
+                <header className={titleClassName}>{title}</header>
+                <Slider
+                    size="xxs"
+                    variants={['fluid']}
+                    name={name}
+                    rules={schema}
+                    value={value}
+                    defaultValue={schema.default}
+                    maximum={maximum}
+                    minimum={minimum}
+                    onChange={e => {
+                        onChange({
+                            ...e,
+                            pointer: e.target.pointer
+                        });
+                    }} />
+            </div>
+        );
+
+    }
+
+}
+
+Range.propTypes = {
+    onChange: PropTypes.func.isRequired
+};
+
+registerWidget(function (schema) {
+
+    const {
+        type,
+        maximum,
+        minimum
+    } = schema;
+
+    if (
+        (type === 'number' || type === 'integer')
+        && maximum != null && minimum != null
+    ) {
+        return Range;
+    }
+
+});

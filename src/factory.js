@@ -5,13 +5,13 @@
 
 const providers = [];
 
-export function getComponent(schema) {
+export function getWidget(schema) {
 
     for (let i = providers.length - 1; i >= 0; i--) {
         const provider = providers[i];
-        const Component = provider(schema);
-        if (Component) {
-            return Component;
+        const Widget = provider(schema);
+        if (Widget) {
+            return Widget;
         }
     }
 
@@ -19,7 +19,7 @@ export function getComponent(schema) {
 
 }
 
-export function registerComponent(type, Component) {
+export function registerWidget(type, Widget) {
 
     if (typeof type === 'function') {
         providers.push(type);
@@ -28,7 +28,7 @@ export function registerComponent(type, Component) {
     if (typeof type === 'string') {
         providers.push(function (schema) {
             if (schema.type === type) {
-                return Component;
+                return Widget;
             }
         });
     }

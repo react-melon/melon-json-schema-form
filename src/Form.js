@@ -3,94 +3,99 @@
  * @author leon(ludafa@outlook.com)
  */
 
-import React, {PropTypes} from 'react';
-import Form from 'melon-core/Form';
-import Validator from 'melon-json-schema-validator';
-import * as jp from './pointer';
-import ReactDOM from 'react-dom';
+import React, {PropTypes, Component} from 'react';
 import Field from './Field';
-import {getOrderedKeys} from './util/getOrderedKeys';
+import {createStore, applyMiddleware} from 'redux';
+import validator from './validator';
+import createReducer from './reducer';
+import {isValid, getValue} from './selector';
+import {actionToEvent} from './middleware';
+import {bindActionCreators} from './util/bindActionCreators';
 
-const validator = new Validator({
-    jsonPointers: true,
-    allErrors: true
-});
+import {
+    loadForm,
+    mergeForm,
+    validateForm,
+    blurField,
+    focusField,
+    spliceArrayField,
+    changeField
+} from './action';
 
-validator.addFormat('color', /^#[0-9a-f]{6}$/i);
+export default class JSONSchemaForm extends Component {
 
-export default class JSONSchemaForm extends Form {
+    constructor(props, context) {
 
-    constructor(...args) {
-        super(...args);
+        super(props, context);
+
         this.onSubmit = this.onSubmit.bind(this);
-        this.onFieldChange = this.onFieldChange.bind(this);
-    }
 
-    isValidFormField(field) {
+        const reducer = createReducer(this);
+        const middlewares = [actionToEvent(this)];
 
-        const value = field.getValue();
-        const {pointer, props} = field;
-        const {name, disabled} = props;
+        if (process.env.NODE_ENV === 'dev') {
+            const createLogger = require('redux-logger');
+            const logger = createLogger({
+                collapsed: true,
+                logErrors: false
+            });
+            middlewares.push(logger);
+        }
 
-        return name
-            && !disabled
-            && value != null
-            && pointer;
+        this.store = createStore(reducer, applyMiddleware(...middlewares));
 
-    }
-
-    getData() {
-
-        const type = this.props.schema.type;
-
-        return this.fields.reduceRight(
-            function (data, field) {
-                jp.set(data, field.pointer, field.getValue());
-                return data;
-            },
-            type === 'array' ? [] : {}
+        this.fieldActions = bindActionCreators(
+            this.store.dispatch,
+            {
+                blurField,
+                focusField,
+                spliceArrayField,
+                changeField
+            }
         );
 
     }
 
-    validate() {
+    componentWillMount() {
 
-        const data = this.getData();
-        const validity = this.checkValidity(data);
-        const fields = this.fields;
-        const states = validity.states;
-        const isValid = validity.isValid();
+        const {
+            value,
+            schema,
+            validator
+        } = this.props;
 
-        const invalidFieldMap = states.reduce(function (map, state) {
-            map[state.dataPath] = state;
-            return map;
-        }, {});
+        this.store.dispatch(loadForm(value, schema, validator));
 
-        let first = null;
-
-        for (let i = fields.length - 1; i >= 0; i--) {
-            const field = fields[i];
-            const state = invalidFieldMap[field.pointer];
-
-            if (state) {
-                field.setCustomValidity(state.message);
-                first = field;
-            }
-            else {
-                field.setCustomValidity(null);
-            }
-
-        }
-
-        if (first) {
-            ReactDOM.findDOMNode(first).scrollIntoView();
-        }
-
-        return isValid;
     }
 
-    checkValidity(data) {
-        return this.props.validator.validate(data, this);
+    componentWillReceiveProps(nextProps) {
+        const {
+            value,
+            schema,
+            validator
+        } = nextProps;
+        this.store.dispatch(mergeForm(value, schema, validator));
+    }
+
+    getChildContext() {
+        return {
+            store: this.store,
+            actions: this.fieldActions
+        };
+    }
+
+    getValue() {
+        return getValue(this.store.getState());
+    }
+
+    validate() {
+
+        const store = this.store;
+
+        store.dispatch(validateForm());
+
+        return isValid(store.getState());
+
     }
 
     onSubmit(e) {
@@ -108,44 +113,25 @@ export default class JSONSchemaForm extends Form {
         }
 
         if (onSubmit) {
-            e.data = this.getData();
+            e.data = this.getValue();
             onSubmit(e);
         }
-    }
 
-    onFieldChange(e) {
-        const onFieldChange = this.props.onFieldChange;
-        if (onFieldChange) {
-            onFieldChange(e);
-        }
     }
 
     render() {
 
         const {
             schema,
-            uiSchema = {},
-            value = {},
-            renderForm,
+            uiSchema,
+            children,
             ...rest
         } = this.props;
 
-        const properties = schema.properties;
-
-        const fields = getOrderedKeys(schema.properties, uiSchema['@order'])
-            .map(name => (
-                <Field
-                    name={name}
-                    key={name}
-                    schema={properties[name]}
-                    uiSchema={uiSchema[name]}
-                    value={value[name]}
-                    onChange={this.onFieldChange} />
-            ));
-
         return (
-            <form {...rest} onSubmit={this.onSubmit}>
-                {renderForm(this.props, fields)}
+            <form {...rest} onSubmit={this.onSubmit} value={null}>
+                <Field schema={schema} uiSchema={uiSchema} pointer={''} />
+                {children}
             </form>
         );
 
@@ -157,15 +143,16 @@ JSONSchemaForm.displayName = 'JSONSchemaForm';
 
 JSONSchemaForm.defaultProps = {
     validator,
-    renderForm(props, fields = []) {
-        return fields.concat(props.children);
-    }
+    uiSchema: {}
+};
+
+JSONSchemaForm.childContextTypes = {
+    store: PropTypes.object.isRequired,
+    actions: PropTypes.object.isRequired
 };
 
 JSONSchemaForm.propTypes = {
-    ...Form.propTypes,
     schema: PropTypes.object.isRequired,
-    onFieldChange: PropTypes.func
+    onFieldChange: PropTypes.func,
+    onSubmit: PropTypes.func
 };
-
-JSONSchemaForm.childContextTypes = Form.childContextTypes;

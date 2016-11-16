@@ -4,10 +4,12 @@
  */
 
 import React, {Component, PropTypes} from 'react';
+
 import BoxGroup from 'melon/BoxGroup';
 import {createClassName} from 'melon-core/classname/classname';
-import {registerComponent} from '../factory';
 import shallowEqual from 'melon-core/util/shallowEqual';
+
+import {registerWidget} from '../../factory';
 
 export default class ArrayCheckBox extends Component {
 
@@ -45,7 +47,12 @@ export default class ArrayCheckBox extends Component {
                     name={name}
                     rules={schema}
                     value={value}
-                    onChange={onChange}>
+                    onChange={e => {
+                        onChange({
+                            ...e,
+                            pointer: e.target.pointer
+                        });
+                    }}>
                     {options}
                 </BoxGroup>
             </div>
@@ -61,7 +68,7 @@ ArrayCheckBox.propTypes = {
     onChange: PropTypes.func.isRequired
 };
 
-registerComponent(function (schema) {
+registerWidget(function (schema) {
 
     const {
         type,

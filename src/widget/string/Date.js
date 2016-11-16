@@ -1,15 +1,16 @@
 /**
- * @file Color
+ * @file Date
  * @author leon <ludafa@outlook.com>
  */
 
 import React, {Component, PropTypes} from 'react';
-import ColorPicker from 'melon-colorpicker';
-import {registerComponent} from '../factory';
+import Calendar from 'melon-calendar';
 import {createClassName} from 'melon-core/classname/classname';
 import shallowEqual from 'melon-core/util/shallowEqual';
 
-export default class ColorField extends Component {
+import {registerWidget} from '../../factory';
+
+export default class DateField extends Component {
 
     shouldComponentUpdate(nextProps) {
         return !shallowEqual(nextProps, this.props);
@@ -24,7 +25,11 @@ export default class ColorField extends Component {
             name
         } = this.props;
 
-        const title = schema.title;
+        const {
+            title,
+            begin,
+            end
+        } = schema;
 
         const titleClassName = createClassName(
             'ui-field-title',
@@ -34,14 +39,21 @@ export default class ColorField extends Component {
         return (
             <div className="ui-field ui-field-string variant-string">
                 <header className={titleClassName}>{title}</header>
-                <ColorPicker
+                <Calendar
                     size="xxs"
                     variants={['fluid']}
                     name={name}
                     rules={schema}
                     value={value}
                     defaultValue={schema.default}
-                    onChange={onChange} />
+                    begin={begin}
+                    end={end}
+                    onChange={e => {
+                        onChange({
+                            ...e,
+                            pointer: e.target.pointer
+                        });
+                    }} />
             </div>
         );
 
@@ -49,21 +61,19 @@ export default class ColorField extends Component {
 
 }
 
-ColorField.displayName = 'ColorField';
-
-ColorField.propTypes = {
+DateField.propTypes = {
     schema: PropTypes.object.isRequired,
     value: PropTypes.string,
     onChange: PropTypes.func.isRequired
 };
 
-registerComponent(function (schema) {
+registerWidget(function (schema) {
 
     if (
         schema.type === 'string'
-        && schema.format === 'color'
+        && schema.format === 'date'
     ) {
-        return ColorField;
+        return DateField;
     }
 
 });

@@ -3,6 +3,8 @@
  * @author leon(ludafa@outlook.com)
  */
 
+import u from 'react-addons-update';
+
 /**
  * Lookup a json pointer in an object
  *
@@ -12,21 +14,23 @@
  */
 export function get(obj, pointer) {
 
+    let result = obj;
+
     const refTokens = Array.isArray(pointer) ? pointer : parse(pointer);
 
-    for (let i = 0; i < refTokens.length; ++i) {
+    for (let i = 0, len = refTokens.length; i < len; ++i) {
 
         const token = refTokens[i];
 
         if (!(typeof obj === 'object' && token in obj)) {
-            throw new Error('Invalid reference token: ' + token);
+            return null;
         }
 
-        obj = obj[token];
+        result = result[token];
 
     }
 
-    return obj;
+    return result;
 }
 
 /**
@@ -77,22 +81,54 @@ export function set(obj, pointer, value) {
 
 }
 
+export function update(state, pointer, command) {
+
+    if (!Array.isArray(pointer)) {
+        pointer = parse(pointer);
+    }
+
+    const action = pointer
+        .reduceRight(function (command, term) {
+
+            if (term) {
+                command = {
+                    [term]: command
+                };
+            }
+
+            return command;
+
+        }, command);
+
+    return u(state, action);
+
+}
+
 /**
  * Removes an attribute
  *
  * @param {Object} obj obj
  * @param {string|Array<string>} pointer pointer
+ * @return {Object}
  */
 export function remove(obj, pointer) {
 
-    const refTokens = Array.isArray(pointer) ? pointer : parse(pointer);
-    const finalToken = refTokens[refTokens.length - 1];
+    const token = Array.isArray(pointer) ? pointer : parse(pointer);
 
-    if (finalToken === void 0) {
+    const finalToken = token[token.length - 1];
+
+    if (finalToken == null) {
         throw new Error('Invalid JSON pointer for remove: "' + pointer + '"');
     }
 
-    delete get(obj, refTokens.slice(0, -1))[finalToken];
+    return update(obj, token.slice(0, -1), {
+        $apply(parent) {
+            const copy = {...parent};
+            delete copy[finalToken];
+            return copy;
+        }
+    });
+
 }
 
 /**
@@ -104,9 +140,13 @@ export function remove(obj, pointer) {
  */
 export function dict(obj, descend) {
     const results = {};
-    walk(obj, function (value, pointer) {
-        results[pointer] = value;
-    }, descend);
+    walk(
+        obj,
+        (value, pointer) => {
+            results[pointer] = value;
+        },
+        descend
+    );
     return results;
 }
 
@@ -130,7 +170,8 @@ export function walk(obj, iterator, descend) {
     };
 
     function next(cur) {
-        Object.keys(cur, function (key) {
+
+        Object.keys(cur).forEach(key => {
 
             const value = cur[key];
 
@@ -215,7 +256,5 @@ export function parse(pointer) {
  * @return {string}
  */
 export function compile(refTokens) {
-    return !refTokens.length
-        ? '/' + refTokens.map(escape).join('/')
-        : '';
+    return refTokens.length ? `/${refTokens.map(escape).join('/')}` : '';
 }

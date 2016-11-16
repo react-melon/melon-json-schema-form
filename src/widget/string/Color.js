@@ -1,15 +1,16 @@
 /**
- * @file Range
+ * @file Color
  * @author leon <ludafa@outlook.com>
  */
 
-import React, {PropTypes, Component} from 'react';
-import Slider from 'melon/Slider';
-import {registerComponent} from '../factory';
+import React, {Component, PropTypes} from 'react';
+import ColorPicker from 'melon-colorpicker';
 import {createClassName} from 'melon-core/classname/classname';
 import shallowEqual from 'melon-core/util/shallowEqual';
 
-export default class Range extends Component {
+import {registerWidget} from '../../factory';
+
+export default class ColorField extends Component {
 
     shouldComponentUpdate(nextProps) {
         return !shallowEqual(nextProps, this.props);
@@ -24,11 +25,7 @@ export default class Range extends Component {
             name
         } = this.props;
 
-        const {
-            maximum,
-            minimum,
-            title
-        } = schema;
+        const title = schema.title;
 
         const titleClassName = createClassName(
             'ui-field-title',
@@ -38,16 +35,19 @@ export default class Range extends Component {
         return (
             <div className="ui-field ui-field-string variant-string">
                 <header className={titleClassName}>{title}</header>
-                <Slider
+                <ColorPicker
                     size="xxs"
                     variants={['fluid']}
                     name={name}
                     rules={schema}
                     value={value}
                     defaultValue={schema.default}
-                    maximum={maximum}
-                    minimum={minimum}
-                    onChange={onChange} />
+                    onChange={e => {
+                        onChange({
+                            ...e,
+                            pointer: e.targer.pointer
+                        });
+                    }} />
             </div>
         );
 
@@ -55,23 +55,21 @@ export default class Range extends Component {
 
 }
 
-Range.propTypes = {
+ColorField.displayName = 'ColorField';
+
+ColorField.propTypes = {
+    schema: PropTypes.object.isRequired,
+    value: PropTypes.string,
     onChange: PropTypes.func.isRequired
 };
 
-registerComponent(function (schema) {
-
-    const {
-        type,
-        maximum,
-        minimum
-    } = schema;
+registerWidget(function (schema) {
 
     if (
-        (type === 'number' || type === 'integer')
-        && maximum != null && minimum != null
+        schema.type === 'string'
+        && schema.format === 'color'
     ) {
-        return Range;
+        return ColorField;
     }
 
 });

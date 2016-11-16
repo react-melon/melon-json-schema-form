@@ -6,9 +6,10 @@
 import React, {Component, PropTypes} from 'react';
 import InputComponent from 'melon-core/InputComponent';
 import {createClassName} from 'melon-core/classname/classname';
-import {registerComponent, getComponent} from '../factory';
-import resolveDefaults from '../util/resolveDefaults';
 import shallowEqual from 'melon-core/util/shallowEqual';
+
+import {registerWidget, getWidget} from '../../factory';
+import resolveDefaults from '../../util/resolveDefaults';
 
 export class ArrayTupleItem extends Component {
 
@@ -37,7 +38,8 @@ export class ArrayTupleItem extends Component {
             type: 'change',
             target,
             value,
-            index
+            index,
+            pointer: this.pointer
         });
 
     }
@@ -121,7 +123,7 @@ export default class ArrayTuple extends InputComponent {
                 <ol className="ui-field-content">
                     {items.map((item, index) => {
 
-                        const Field = getComponent(item);
+                        const Field = getWidget(item);
 
                         if (!Field) {
                             return null;
@@ -166,7 +168,7 @@ ArrayTuple.defaultProps = {
     value: []
 };
 
-registerComponent(function (schema) {
+registerWidget(function (schema) {
 
     const {
         type,

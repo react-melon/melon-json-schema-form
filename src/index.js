@@ -6,23 +6,23 @@
 import Form from './Form';
 import Field from './Field';
 
-import ObjectField from './Object';
-import Boolean from './Boolean';
-import Number from './number/Number';
-import Range from './number/Range';
+import ObjectField from './widget/Object';
+import Boolean from './widget/Boolean';
+import Number from './widget/number/Number';
+import Range from './widget/number/Range';
 
-import Text from './string/Text';
-import Color from './string/Color';
-import DateField from './string/Date';
-import EnumText from './string/EnumText';
-import Image from './string/Image';
+import Text from './widget/string/Text';
+import Color from './widget/string/Color';
+import DateField from './widget/string/Date';
+import EnumText from './widget/string/EnumText';
+import Image from './widget/string/Image';
 
-import VariableArray from './array/VariableArray';
-import Tuple from './array/Tuple';
-import CheckBox from './array/CheckBox';
+import VariableArray from './widget/array/VariableArray';
+import Tuple from './widget/array/Tuple';
+import CheckBox from './widget/array/CheckBox';
 
 import resolveDefaults from './util/resolveDefaults';
-import * as pointer from './pointer';
+import * as pointer from './util/pointer';
 
 export * from './factory';
 

@@ -1,15 +1,15 @@
 /**
- * @file Date
+ * @file Image
  * @author leon <ludafa@outlook.com>
  */
 
 import React, {Component, PropTypes} from 'react';
-import Calendar from 'melon-calendar';
-import {registerComponent} from '../factory';
+import Uploader from 'melon/Uploader';
 import {createClassName} from 'melon-core/classname/classname';
 import shallowEqual from 'melon-core/util/shallowEqual';
+import {getUploaderHandler, registerWidget} from '../../factory';
 
-export default class DateField extends Component {
+export default class Image extends Component {
 
     shouldComponentUpdate(nextProps) {
         return !shallowEqual(nextProps, this.props);
@@ -24,12 +24,6 @@ export default class DateField extends Component {
             name
         } = this.props;
 
-        const {
-            title,
-            begin,
-            end
-        } = schema;
-
         const titleClassName = createClassName(
             'ui-field-title',
             'variant-level-4'
@@ -37,17 +31,20 @@ export default class DateField extends Component {
 
         return (
             <div className="ui-field ui-field-string variant-string">
-                <header className={titleClassName}>{title}</header>
-                <Calendar
+                <header className={titleClassName}>{schema.title}</header>
+                <Uploader
                     size="xxs"
-                    variants={['fluid']}
                     name={name}
+                    variants={['fluid']}
                     rules={schema}
+                    upload={getUploaderHandler()}
                     value={value}
-                    defaultValue={schema.default}
-                    begin={begin}
-                    end={end}
-                    onChange={onChange} />
+                    onChange={e => {
+                        onChange({
+                            ...e,
+                            pointer: e.target.pointer
+                        });
+                    }} />
             </div>
         );
 
@@ -55,19 +52,20 @@ export default class DateField extends Component {
 
 }
 
-DateField.propTypes = {
+Image.propTypes = {
     schema: PropTypes.object.isRequired,
     value: PropTypes.string,
     onChange: PropTypes.func.isRequired
 };
 
-registerComponent(function (schema) {
+registerWidget(function (schema) {
 
     if (
         schema.type === 'string'
-        && schema.format === 'date'
+        && schema.media
+        && /^image\//.test(schema.media.type)
     ) {
-        return DateField;
+        return Image;
     }
 
 });
