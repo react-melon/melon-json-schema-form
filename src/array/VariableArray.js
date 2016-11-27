@@ -259,9 +259,7 @@ export default class VariableArray extends InputComponent {
         // 如果 value 没有任何一项，那这个时候数组空
         // 那么我先做一个默认值项出来
         if (!value || !value.length) {
-            value = [
-                resolveDefaults(items)
-            ];
+            value = resolveDefaults(items);
         }
 
         const addButton = maxItems > value.length
@@ -276,7 +274,7 @@ export default class VariableArray extends InputComponent {
                             target: this,
                             value: [
                                 ...value,
-                                resolveDefaults(schema)
+                                ...resolveDefaults(schema)
                             ]
                         });
                     }}>
