@@ -19,7 +19,7 @@ export default function resolve(schema) {
             const items = schema.items;
             return Array.isArray(items)
                 ? items.map(resolve)
-                : resolve(items);
+                : [resolve(items)];
 
         case 'string':
             return schema.default || '';
