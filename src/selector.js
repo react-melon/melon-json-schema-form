@@ -3,7 +3,7 @@
  * @author leon <ludafa@outlook.com>
  */
 
-import {get} from './util/dataPath';
+import {getIn} from './util/dataPath';
 
 export function isValid(state) {
 
@@ -32,7 +32,7 @@ export function getFieldData(state, pointer) {
     } = state;
 
     const data = {
-        value: pointer ? get(value, pointer) : value,
+        value: pointer ? getIn(value, pointer) : value,
         validity: validity ? validity[pointer] : null,
         meta: meta[pointer]
     };

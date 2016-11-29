@@ -6,14 +6,6 @@
 import React, {Component, PropTypes} from 'react';
 
 import {getFieldData} from '../selector';
-import {
-    focusField,
-    changeField,
-    blurField,
-    addField,
-    removeField
-} from '../action';
-import {bindActionCreators} from './bindActionCreators';
 import shallowEqual from 'shallow-equal/objects';
 
 export function connectToForm(Field) {
@@ -22,23 +14,12 @@ export function connectToForm(Field) {
 
         constructor(props, context) {
             super(props, context);
-            this.state = getFieldData(
-                context.store.getState(),
-                props.pointer
-            );
-        }
-
-        componentWillMount() {
-            this.actions = bindActionCreators(
-                this.context.store.dispatch,
-                {
-                    focusField,
-                    changeField,
-                    blurField,
-                    addField,
-                    removeField
-                }
-            );
+            this.state = {
+                data: getFieldData(
+                    context.store.getState(),
+                    props.name
+                )
+            };
         }
 
         componentDidMount() {
@@ -49,15 +30,19 @@ export function connectToForm(Field) {
 
                 const nextFieldData = getFieldData(
                     store.getState(),
-                    this.props.pointer
+                    this.props.name
                 );
 
                 if (nextFieldData !== this.state) {
-                    this.setState(nextFieldData);
+                    this.setState({data: nextFieldData});
                 }
 
             });
 
+        }
+
+        shouldComponentUpdate(nextProps, nextState) {
+            return !shallowEqual(nextState, this.state);
         }
 
         componentWillUnmount() {
@@ -65,16 +50,12 @@ export function connectToForm(Field) {
             this.unsubscribe = null;
         }
 
-        shouldComponentUpdate(nextProps, nextState) {
-            return !shallowEqual(nextState, this.state);
-        }
-
         render() {
 
             return (
                 <Field
                     {...this.props}
-                    {...this.state}
+                    {...this.state.data}
                     actions={this.context.actions} />
             );
         }

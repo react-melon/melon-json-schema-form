@@ -4,10 +4,10 @@
  */
 
 import React, {PropTypes} from 'react';
-import {registerWidget} from '../factory';
+import {registerWidget} from '../../factory';
 
 import Field from '../Field';
-import {getOrderedKeys} from '../util/getOrderedKeys';
+import {getOrderedKeys} from '../../util/getOrderedKeys';
 
 /**
  * ObjectField
@@ -20,19 +20,20 @@ export default function ObjectField(props) {
     const {
         schema,
         uiSchema,
-        pointer
+        name
     } = props;
 
     const properties = schema.properties;
 
     const fields = getOrderedKeys(properties, uiSchema['@order'])
-        .map(name => {
+        .map(childName => {
 
-            const key = `${pointer}.${name}`;
+            const key = `${name}${name ? '.' : ''}${childName}`;
 
             return (
-                <Field key={key} pointer={key} schema={properties[name]} />
+                <Field key={key} name={key} schema={properties[childName]} />
             );
+
         });
 
     return (
@@ -46,6 +47,7 @@ export default function ObjectField(props) {
 ObjectField.displayName = 'ObjectWidget';
 
 ObjectField.propTypes = {
+    name: PropTypes.string.isRequired,
     value: PropTypes.object,
     uiSchema: PropTypes.object.isRequired,
     schema: PropTypes.object.isRequired

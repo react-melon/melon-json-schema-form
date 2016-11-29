@@ -1,16 +1,15 @@
 /**
- * @file Date
+ * @file Range
  * @author leon <ludafa@outlook.com>
  */
 
-import React, {Component, PropTypes} from 'react';
-import Calendar from 'melon-calendar';
+import React, {PropTypes, Component} from 'react';
+import Slider from 'melon/Slider';
+import {registerWidget} from '../../../factory';
 import {createClassName} from 'melon-core/classname/classname';
 import shallowEqual from 'melon-core/util/shallowEqual';
 
-import {registerWidget} from '../../factory';
-
-export default class DateField extends Component {
+export default class Range extends Component {
 
     shouldComponentUpdate(nextProps) {
         return !shallowEqual(nextProps, this.props);
@@ -26,9 +25,9 @@ export default class DateField extends Component {
         } = this.props;
 
         const {
-            title,
-            begin,
-            end
+            maximum,
+            minimum,
+            title
         } = schema;
 
         const titleClassName = createClassName(
@@ -39,15 +38,15 @@ export default class DateField extends Component {
         return (
             <div className="ui-field ui-field-string variant-string">
                 <header className={titleClassName}>{title}</header>
-                <Calendar
+                <Slider
                     size="xxs"
                     variants={['fluid']}
                     name={name}
                     rules={schema}
                     value={value}
                     defaultValue={schema.default}
-                    begin={begin}
-                    end={end}
+                    maximum={maximum}
+                    minimum={minimum}
                     onChange={e => {
                         onChange({
                             ...e,
@@ -61,19 +60,23 @@ export default class DateField extends Component {
 
 }
 
-DateField.propTypes = {
-    schema: PropTypes.object.isRequired,
-    value: PropTypes.string,
+Range.propTypes = {
     onChange: PropTypes.func.isRequired
 };
 
 registerWidget(function (schema) {
 
+    const {
+        type,
+        maximum,
+        minimum
+    } = schema;
+
     if (
-        schema.type === 'string'
-        && schema.format === 'date'
+        (type === 'number' || type === 'integer')
+        && maximum != null && minimum != null
     ) {
-        return DateField;
+        return Range;
     }
 
 });

@@ -1,58 +1,60 @@
 /**
- * @file Range
+ * @file ArrayCheckBox
  * @author leon <ludafa@outlook.com>
  */
 
-import React, {PropTypes, Component} from 'react';
-import Slider from 'melon/Slider';
-import {registerWidget} from '../../factory';
+import React, {Component, PropTypes} from 'react';
+
+import BoxGroup from 'melon/BoxGroup';
 import {createClassName} from 'melon-core/classname/classname';
 import shallowEqual from 'melon-core/util/shallowEqual';
 
-export default class Range extends Component {
+import {registerWidget} from '../../../factory';
+
+export default class ArrayCheckBox extends Component {
 
     shouldComponentUpdate(nextProps) {
-        return !shallowEqual(nextProps, this.props);
+        return !shallowEqual(this.props, nextProps);
     }
 
     render() {
 
         const {
             schema,
+            name,
             value,
-            onChange,
-            name
+            onChange
         } = this.props;
-
-        const {
-            maximum,
-            minimum,
-            title
-        } = schema;
 
         const titleClassName = createClassName(
             'ui-field-title',
             'variant-level-4'
         );
 
+        const {title, items} = schema;
+        const enumNames = items.enumNames || [];
+
+        const options = items.enum.map((item, index) => (
+            <option key="item" value={item}>{enumNames[index] || item}</option>
+        ));
+
         return (
-            <div className="ui-field ui-field-string variant-string">
+            <div
+                className="ui-field ui-field-string variant-string" >
                 <header className={titleClassName}>{title}</header>
-                <Slider
+                <BoxGroup
                     size="xxs"
-                    variants={['fluid']}
                     name={name}
                     rules={schema}
                     value={value}
-                    defaultValue={schema.default}
-                    maximum={maximum}
-                    minimum={minimum}
                     onChange={e => {
                         onChange({
                             ...e,
                             pointer: e.target.pointer
                         });
-                    }} />
+                    }}>
+                    {options}
+                </BoxGroup>
             </div>
         );
 
@@ -60,7 +62,9 @@ export default class Range extends Component {
 
 }
 
-Range.propTypes = {
+
+ArrayCheckBox.propTypes = {
+    schema: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired
 };
 
@@ -68,15 +72,18 @@ registerWidget(function (schema) {
 
     const {
         type,
-        maximum,
-        minimum
+        uniqueItems,
+        items
     } = schema;
 
     if (
-        (type === 'number' || type === 'integer')
-        && maximum != null && minimum != null
+        type === 'array'
+        && uniqueItems
+        && typeof items === 'object'
+        && items.type === 'string'
+        && items.enum
     ) {
-        return Range;
+        return ArrayCheckBox;
     }
 
 });

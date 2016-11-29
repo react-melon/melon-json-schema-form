@@ -3,82 +3,31 @@
  * @author leon <ludafa@outlook.com>
  */
 
-import * as types from './actionType';
+import {
+    FOCUS,
+    CHANGE,
+    TOUCH,
+    BLUR,
+    ARRAY_SWAP,
+    ARRAY_PUSH,
+    ARRAY_POP,
+    ARRAY_SHIFT,
+    ARRAY_UNSHIFT,
+    ARRAY_SPLICE,
+    FORM_INIT,
+    FORM_RESET,
+    FORM_VALIDATE,
+} from './actionType';
+
 import update from 'react-addons-update';
-import * as dataPath from './util/dataPath';
+import {getIn, setIn} from './util/dataPath';
+import * as dataPathMap from './util/dataPathMap';
 import {fill} from './util/schema';
 import mapValues from 'lodash/mapValues';
-import mergeWith from 'lodash/mergeWith';
-import startWith from 'lodash/startsWith';
 
 const DEFAULT_META = {
     touched: false
 };
-
-function spliceDataMap(
-    origin, pointer,
-    arr, start, deleteCount, replacements
-) {
-
-    const replaceCount = replacements.length;
-
-    let keys = Object.keys(origin);
-
-    // 不是数组里边的东西直接拿到，数据里边的直接滤掉
-    let result = keys.reduce(
-        (result, key) => {
-            if (!startWith(key, `${pointer}[`)) {
-                result[key] = origin[key];
-            }
-            return result;
-        },
-        {}
-    );
-
-    return arr
-        // 计算出需要保留的元素应该放到的新坑位
-        .map((_, index) => {
-
-            // 原地保留的
-            if (index < start) {
-                return index;
-            }
-
-            // 需要移动的
-            if (index >= start + deleteCount) {
-                return start + index - deleteCount + replaceCount;
-            }
-
-            // 删除的
-            return null;
-
-        })
-        .reduce((result, to, from) => {
-
-            if (to == null) {
-                return result;
-            }
-
-            from = `${pointer}[${from}]`;
-            to = `${pointer}[${to}]`;
-
-            return keys
-                // 找到需要被拷贝的
-                .filter(key => startWith(key, from))
-                // 丢到结果中
-                .reduce((result, key) => {
-
-                    // 当发生移动时，修改前缀
-                    key = to === from ? key : key.replace(from, to);
-
-                    result[key] = origin[key];
-                    return result;
-
-                }, result);
-
-        }, result);
-
-}
 
 export default function createReducer(form) {
 
@@ -101,8 +50,12 @@ export default function createReducer(form) {
 
             error.valid = false;
 
+            if (dataPath[0] === '.') {
+                dataPath = dataPath.slice(1);
+            }
+
             if (!dataPath && keyword === 'required') {
-                error.dataPath = dataPath = `.${params.missingProperty}`;
+                error.dataPath = dataPath = params.missingProperty;
             }
 
             validity[dataPath] = validity[dataPath]
@@ -115,13 +68,17 @@ export default function createReducer(form) {
 
     }
 
-    function loadForm(state, {value, schema, validator}) {
+    function formInit(state, {value, schema, validator}) {
+
+        value = fill({...value}, schema);
 
         return update(state, {
-            value: {$set: fill({...value}, schema)},
+            value: {
+                $set: value
+            },
             meta: {
                 $set: mapValues(
-                    dataPath.dict(fill({...value}, schema)),
+                    dataPathMap.make(value),
                     () => DEFAULT_META
                 )
             },
@@ -132,31 +89,7 @@ export default function createReducer(form) {
 
     }
 
-    function mergeForm(state, {value, schema, validator}) {
-
-        if (state.value === value) {
-            return state;
-        }
-
-        return update(state, {
-            value: {$set: value},
-            meta: {
-                $apply(meta) {
-                    return mergeWith(
-                        meta,
-                        dataPath.dict(value),
-                        (targetValue, srcValue) => (targetValue || srcValue)
-                    );
-                }
-            },
-            validity: {
-                $set: checkValidity(value, schema, validator)
-            }
-        });
-
-    }
-
-    function validateForm(state) {
+    function formValidate(state) {
 
         return update(state, {
             meta: {
@@ -174,7 +107,11 @@ export default function createReducer(form) {
 
     }
 
-    function focusField(state, pointer) {
+    function formReset(state, payload) {
+
+    }
+
+    function focus(state, pointer) {
 
         return update(state, {
             meta: {
@@ -186,7 +123,7 @@ export default function createReducer(form) {
 
     }
 
-    function blurField(state, pointer) {
+    function blur(state, pointer) {
 
         return update(state, {
             meta: {
@@ -198,17 +135,27 @@ export default function createReducer(form) {
 
     }
 
-    function changeField(state, {pointer, value}) {
+    function touch(state, dataPath) {
+        return update(state, {
+            meta: {
+                [dataPath]: {
+                    touched: {$set: true}
+                }
+            }
+        });
+    }
 
-        const nextValue = dataPath.update(
+    function change(state, {dataPath, value}) {
+
+        const nextValue = setIn(
             state.value,
-            pointer.slice(1),
+            dataPath,
             value
         );
 
         return update(state, {
             meta: {
-                [pointer]: {
+                [dataPath]: {
                     touched: {
                         $set: true
                     }
@@ -224,70 +171,229 @@ export default function createReducer(form) {
 
     }
 
-    function spliceArrayField(state, {pointer, start, deleteCount, replacements}) {
+    function arraySwap(state, {dataPath, from, to}) {
 
-        const targetArray = dataPath.get(state.value, pointer);
+        if (from === to) {
+            return state;
+        }
 
-        const nextValue = dataPath.update(
-            state.value,
-            pointer.slice(1),
-            [
-                ...targetArray.slice(0, start),
-                ...replacements,
-                ...targetArray.slice(start + deleteCount)
-            ]
-        );
+        let {meta, value} = state;
 
-        const nextMeta = spliceDataMap(
-            {...state.meta}, pointer,
-            targetArray, start, deleteCount, replacements,
-        );
+        if (from > to) {
+            [from, to] = [to, from];
+        }
+
+        let currentValue = getIn(value, dataPath);
+        let nextValue = setIn(value, dataPath, [
+            ...currentValue.slice(0, from),
+            currentValue[to],
+            ...currentValue.slice(from + 1, to),
+            currentValue[from],
+            ...currentValue.slice(to + 1)
+        ]);
 
         return update(state, {
-            value: {$set: nextValue},
-            meta: {
-                $set: mergeWith(
-                    nextMeta,
-                    dataPath.dict(nextValue),
-                    targetValue => targetValue || DEFAULT_META
-                )
+            value: {
+                $set: nextValue
             },
-            validity: {$set: checkValidity(nextValue)}
+            meta: {
+                $set: dataPathMap.swap(meta, dataPath, from, to)
+            },
+            validity: {
+                $set: checkValidity(nextValue)
+            }
         });
 
     }
 
-    function main(state = {}, {type, payload}) {
+    function arrayPush(state, {dataPath, elements}) {
 
-        switch (type) {
-            case types.FORM_LOAD:
-                return loadForm(state, payload);
+        let {
+            value,
+            meta
+        } = state;
 
-            case types.FORM_MERGE:
-                return mergeForm(state, payload);
+        let currentValue = getIn(value, dataPath);
+        let currentLength = currentValue.length;
+        let nextValue = setIn(
+            value,
+            dataPath,
+            [...currentValue, ...elements]
+        );
 
-            case types.FORM_VALIDATE:
-                return validateForm(state);
+        return update(state, {
+            value: {
+                $set: nextValue
+            },
+            meta: {
+                $set: elements.reduce((meta, element, i) => {
 
-            case types.FIELD_FOCUS:
-                return focusField(state, payload);
+                    return {
+                        ...meta,
+                        ...mapValues(
+                            dataPathMap.make(
+                                element,
+                                `${dataPath}[${currentLength + i}]`
+                            ),
+                            () => DEFAULT_META
+                        )
+                    };
 
-            case types.FIELD_BLUR:
-                return blurField(state, payload);
-
-            case types.FIELD_CHANGE:
-                return changeField(state, payload);
-
-            case types.FIELD_SPLICE_ARRAY:
-                return spliceArrayField(state, payload);
-
-            case types.FIELD_ADD:
-
-            default:
-                return state;
-        }
+                }, meta)
+            },
+            validity: {
+                $set: checkValidity(nextValue)
+            }
+        });
 
     }
 
-    return main;
+    function arrayPop(state, {dataPath}) {
+
+        let {
+            value,
+            meta
+        } = state;
+
+        let currentValue = getIn(value, dataPath);
+        let nextValue = setIn(value, dataPath, currentValue.slice(0, -1));
+
+        return update(state, {
+            value: {
+                $set: nextValue
+            },
+            meta: {
+                $set: dataPathMap.remove(
+                    meta,
+                    `${dataPath}[${currentValue.length - 1}]`
+                )
+            },
+            validity: {
+                $set: checkValidity(nextValue)
+            }
+        });
+
+    }
+
+    function arrayShift(state, {dataPath}) {
+
+        let {
+            value,
+            meta
+        } = state;
+
+        let currentValue = getIn(value, dataPath);
+        let nextValue = setIn(value, dataPath, currentValue.slice(1));
+
+        return update(state, {
+            value: {
+                $set: nextValue
+            },
+            meta: {
+                $set: dataPathMap.splice(
+                    meta, dataPath,
+                    currentValue, 0, 1, []
+                )
+            },
+            validity: {
+                $set: checkValidity(nextValue)
+            }
+        });
+
+    }
+
+    function arrayUnshift(state, {dataPath, elements}) {
+
+        let {
+            value,
+            meta
+        } = state;
+
+        let currentValue = getIn(value, dataPath);
+        let nextValue = setIn(
+            value,
+            dataPath,
+            [...elements, ...currentValue]
+        );
+
+        return update(state, {
+            value: {
+                $set: nextValue
+            },
+            meta: {
+                $set: dataPathMap.splice(
+                    meta, dataPath,
+                    currentValue, 0, 0, elements
+                )
+            },
+            validity: {
+                $set: checkValidity(nextValue)
+            }
+        });
+
+    }
+
+    function arraySplice(state, payload) {
+
+        let {
+            dataPath,
+            start,
+            deleteCount,
+            replacements
+        } = payload;
+
+        let {
+            value,
+            meta
+        } = state;
+
+
+        let currentValue = getIn(value, dataPath);
+        let nextValue = setIn(
+            value,
+            dataPath,
+            [
+                ...currentValue.slice(0, start),
+                ...replacements,
+                ...currentValue.slice(start + deleteCount)
+            ]
+        );
+
+        return update(state, {
+            value: {
+                $set: nextValue
+            },
+            meta: {
+                $set: dataPathMap.splice(
+                    meta, dataPath,
+                    currentValue, start, deleteCount, replacements
+                )
+            },
+            validity: {
+                $set: checkValidity(nextValue)
+            }
+        });
+
+    }
+
+    const MAP = {
+        [FOCUS]: focus,
+        [CHANGE]: change,
+        [TOUCH]: touch,
+        [BLUR]: blur,
+        [ARRAY_SWAP]: arraySwap,
+        [ARRAY_PUSH]: arrayPush,
+        [ARRAY_POP]: arrayPop,
+        [ARRAY_SHIFT]: arrayShift,
+        [ARRAY_UNSHIFT]: arrayUnshift,
+        [ARRAY_SPLICE]: arraySplice,
+        [FORM_INIT]: formInit,
+        [FORM_RESET]: formReset,
+        [FORM_VALIDATE]: formValidate
+    };
+
+    return function (state = {}, {type, payload}) {
+        let reducer = MAP[type];
+        return reducer ? reducer(state, payload) : state;
+    };
 }

@@ -48,7 +48,7 @@ module.exports = {
         loaders: [{
             test: /\.js?$/,
             loaders: [
-                'babel?presets[]=es2015,presets[]=react,presets[]=stage-1&cacheDirectory'
+                'babel?cacheDirectory'
             ],
             exclude: [
                 /node_modules/
@@ -76,8 +76,6 @@ module.exports = {
             // output.library option above
             name: '[name]'
         }),
-        new webpack.optimize.OccurenceOrderPlugin(),
-        new webpack.IgnorePlugin(/regenerator|nodent|js\-beautify/, /ajv/),
-        new webpack.IgnorePlugin(/locale/, /moment/)
+        new webpack.optimize.OccurenceOrderPlugin()
     ]
 };

@@ -3,50 +3,58 @@
  * @author leon <ludafa@outlook.com>
  */
 
-import g from 'lodash/get';
-import s from 'lodash/set';
-// import u from 'react-addons-update';
+import get from 'lodash/get';
+import toPath from 'lodash/toPath';
 
-export function get(obj, path) {
-    return g(obj, path.slice(1));
+export const getIn = get;
+
+function setInWithPath(state, value, first, ...paths) {
+
+    if (first === void 0) {
+        return value;
+    }
+
+    let next = setInWithPath(state && state[first], value, ...paths);
+
+    if (typeof state !== 'object') {
+        state = isNaN(+first) ? {} : [];
+    }
+
+    if (Array.isArray(state)) {
+        let copy = state.slice();
+        copy[first] = next;
+        return copy;
+    }
+
+    return {
+        ...state,
+        [first]: next
+    };
+
 }
 
-export function set(obj, path, value) {
-    return s(obj, path.slice(1), value);
+export function setIn(state, path, value) {
+    return setInWithPath(state, value, ...toPath(path));
 }
 
-export function update(obj, path, value) {
-    return s(Array.isArray(obj) ? obj.slice() : {...obj}, path, value);
-}
+const ARRAY_LIKE_REG = /^\[\d+\]$/;
 
-export function dict(obj) {
-
-    const map = {};
-
-    walk(obj, (pointer, value) => {
-        map[pointer] = value;
-    });
-
-    return map;
-
-}
-
-export function compile(tokens) {
+export function compilePath(tokens) {
 
     if (!tokens || !tokens.length) {
         return '';
     }
 
-    return tokens
-        .map(token => (
-            /^\[\d+\]$/.test(token) ? token : `.${token}`
+    const pathString = tokens
+        .map((token, index) => (
+            ARRAY_LIKE_REG.test(token)
+                ? token
+                : `.${token}`
         ))
         .join('');
 
-}
+    return pathString[0] === '.' ? pathString.slice(1) : pathString;
 
-function getType(obj) {
-    return Object.prototype.toString.call(obj).slice(8, -1);
 }
 
 export function walk(obj, iterator) {
@@ -60,15 +68,14 @@ export function walk(obj, iterator) {
         Object.keys(cur).forEach(key => {
 
             const value = cur[key];
-            const type = getType(value);
 
             tokens.push(isCurArray ? `[${key}]` : key);
 
-            if (type === 'Object' || type === 'Array') {
+            if (typeof value === 'object') {
                 next(value, iterator);
             }
             else {
-                iterator(compile(tokens), value);
+                iterator(compilePath(tokens), value, isCurArray);
             }
 
             tokens.pop();

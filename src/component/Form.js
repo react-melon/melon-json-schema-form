@@ -6,21 +6,22 @@
 import React, {PropTypes, Component} from 'react';
 import Field from './Field';
 import {createStore, applyMiddleware} from 'redux';
-import validator from './validator';
-import createReducer from './reducer';
-import {isValid, getValue} from './selector';
-import {actionToEvent} from './middleware';
-import {bindActionCreators} from './util/bindActionCreators';
+import validator from '../validator';
+import createReducer from '../reducer';
+import {isValid, getValue} from '../selector';
+import {actionToEvent} from '../middleware';
+import {bindActionCreators} from '../util/bindActionCreators';
 
 import {
-    loadForm,
-    mergeForm,
-    validateForm,
-    blurField,
-    focusField,
-    spliceArrayField,
-    changeField
-} from './action';
+    formInit,
+    formValidate,
+    blur,
+    focus,
+    change,
+    arrayPush,
+    arraySplice,
+    arraySwap
+} from '../action';
 
 export default class JSONSchemaForm extends Component {
 
@@ -47,10 +48,12 @@ export default class JSONSchemaForm extends Component {
         this.fieldActions = bindActionCreators(
             this.store.dispatch,
             {
-                blurField,
-                focusField,
-                spliceArrayField,
-                changeField
+                blur,
+                focus,
+                change,
+                arrayPush,
+                arraySplice,
+                arraySwap
             }
         );
 
@@ -64,17 +67,8 @@ export default class JSONSchemaForm extends Component {
             validator
         } = this.props;
 
-        this.store.dispatch(loadForm(value, schema, validator));
+        this.store.dispatch(formInit(value, schema, validator));
 
-    }
-
-    componentWillReceiveProps(nextProps) {
-        const {
-            value,
-            schema,
-            validator
-        } = nextProps;
-        this.store.dispatch(mergeForm(value, schema, validator));
     }
 
     getChildContext() {
@@ -92,7 +86,7 @@ export default class JSONSchemaForm extends Component {
 
         const store = this.store;
 
-        store.dispatch(validateForm());
+        store.dispatch(formValidate());
 
         return isValid(store.getState());
 
@@ -130,7 +124,7 @@ export default class JSONSchemaForm extends Component {
 
         return (
             <form {...rest} onSubmit={this.onSubmit} value={null}>
-                <Field schema={schema} uiSchema={uiSchema} pointer={''} />
+                <Field schema={schema} uiSchema={uiSchema} name={''} />
                 {children}
             </form>
         );

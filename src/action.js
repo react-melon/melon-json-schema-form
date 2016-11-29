@@ -5,14 +5,14 @@
 
 import * as types from './actionType';
 
-function createFieldChangeMeta(pointer) {
+function createEventMeta(dataPath, type) {
 
     return {
         event: {
-            handler: 'onFieldChange',
+            handler: type,
             getEvent(state) {
                 return {
-                    dataPath: pointer,
+                    dataPath: dataPath,
                     value: state.value
                 };
             }
@@ -21,9 +21,9 @@ function createFieldChangeMeta(pointer) {
 
 }
 
-export function loadForm(value, schema, validator) {
+export function formInit(value, schema, validator) {
     return {
-        type: types.FORM_LOAD,
+        type: types.FORM_INIT,
         payload: {
             value,
             schema,
@@ -32,7 +32,19 @@ export function loadForm(value, schema, validator) {
     };
 }
 
-export function mergeForm(value, schema, validator) {
+export function formValidate() {
+    return {
+        type: types.FORM_VALIDATE
+    };
+}
+
+export function formReset() {
+    return {
+        type: types.FORM_RESET
+    };
+}
+
+export function formMerge(value, schema, validator) {
     return {
         type: types.FORM_MERGE,
         payload: {
@@ -43,80 +55,81 @@ export function mergeForm(value, schema, validator) {
     };
 }
 
-export function focusField(pointer) {
+export function focus(dataPath) {
     return {
-        type: types.FIELD_FOCUS,
-        payload: pointer
+        type: types.FOCUS,
+        payload: dataPath
     };
 }
 
-export function setTouched(pointer) {
+export function change(dataPath, value) {
     return {
-        type: types.FIELD_TOUCH,
-        payload: pointer
-    };
-}
-
-export function changeField(pointer, value) {
-    return {
-        type: types.FIELD_CHANGE,
+        type: types.CHANGE,
         payload: {
-            pointer,
+            dataPath,
             value
         },
-        meta: createFieldChangeMeta(pointer)
+        meta: createEventMeta(dataPath, 'onFieldChange')
     };
 }
 
-export function addField(pointer, value) {
+export function blur(dataPath) {
+    return {
+        type: types.BLUR,
+        payload: dataPath
+    };
+}
+
+export function touch(dataPath) {
+    return {
+        type: types.TOUCH,
+        payload: dataPath
+    };
+}
+
+export function arrayPush(dataPath, ...elements) {
 
     return {
-        type: types.FIELD_ADD,
+        type: types.ARRAY_PUSH,
         payload: {
-            pointer,
-            value
+            dataPath,
+            elements
         },
-        meta: createFieldChangeMeta(pointer)
+        meta: createEventMeta(dataPath, 'onFieldChange')
     };
 
 }
 
-export function spliceArrayField(pointer, start, deleteCount, ...replacements) {
+export function arraySplice(
+    dataPath,
+    start,
+    deleteCount,
+    ...replacements
+) {
 
     return {
-        type: types.FIELD_SPLICE_ARRAY,
+        type: types.ARRAY_SPLICE,
         payload: {
-            pointer,
+            dataPath,
             start,
             deleteCount,
             replacements
-        }
+        },
+        meta: createEventMeta(dataPath, 'onFieldChange')
     };
 
 }
 
-export function blurField(pointer) {
-    return {
-        type: types.FIELD_BLUR,
-        payload: pointer
-    };
-}
+export function arraySwap(dataPath, from, to) {
 
-export function validateForm() {
     return {
-        type: types.FORM_VALIDATE
+        type: types.ARRAY_SWAP,
+        payload: {
+            from,
+            to,
+            dataPath
+        },
+        meta: createEventMeta(dataPath, 'onFieldChange')
     };
-}
 
-export function resetForm() {
-    return {
-        type: types.FORM_RESET
-    };
-}
-
-export function validateField(pointer) {
-    return {
-        type: types.FIELD_VALIDATE,
-        payload: pointer
-    };
 }

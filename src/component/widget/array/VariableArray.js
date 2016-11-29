@@ -8,8 +8,8 @@ import Button from 'melon/Button';
 import Icon from 'melon/Icon';
 import shallowEqual from 'melon-core/util/shallowEqual';
 import Field from '../../Field';
-import {registerWidget} from '../../factory';
-import {resolveDefaults} from '../../util/resolveDefaults';
+import {registerWidget} from '../../../factory';
+import {resolveDefaults} from '../../../util/resolveDefaults';
 
 export class VariableArrayItem extends Component {
 
@@ -65,7 +65,7 @@ export class VariableArrayItem extends Component {
 
         const {
             schema,
-            pointer,
+            name,
             removable,
             downable,
             index
@@ -120,7 +120,7 @@ export class VariableArrayItem extends Component {
         return (
             <li>
                 {title}
-                <Field pointer={pointer} schema={schema} />
+                <Field name={name} schema={schema} />
             </li>
         );
     }
@@ -150,49 +150,52 @@ export default class VariableArray extends Component {
     onFieldAdd() {
 
         const {
-            spliceArrayField,
-            pointer,
-            value,
+            actions,
+            name,
             schema
         } = this.props;
 
-        spliceArrayField(
-            pointer,
-            // 起始位置
-            value ? value.length : 0,
-            // 删除个数
-            0,
-            // 追加元素
-            resolveDefaults(schema.items)
-        );
+        actions.arrayPush(name, resolveDefaults(schema.items));
 
     }
 
     onFieldUpward(index) {
+
+        const {
+            actions,
+            name
+        } = this.props;
+
+        actions.arraySwap(name, index, index - 1);
+
     }
 
     onFieldDownward(index) {
+
+        const {
+            actions,
+            name
+        } = this.props;
+
+        actions.arraySwap(name, index, index + 1);
+
     }
 
     onFieldRemove(index) {
 
         const {
-            spliceArrayField,
-            pointer
+            actions,
+            name
         } = this.props;
 
-        spliceArrayField(
-            pointer,
-            index,
-            1
-        );
+        actions.arraySplice(name, index, 1);
 
     }
 
     render() {
 
         let {
-            pointer,
+            name,
             schema,
             value
             // meta,
@@ -226,11 +229,11 @@ export default class VariableArray extends Component {
             : null;
 
         const fields = value.map((record, index, arr) => {
-            const key = `${pointer}[${index}]`;
+            const key = `${name}[${index}]`;
             return (
                 <VariableArrayItem
                     key={key}
-                    pointer={key}
+                    name={key}
                     schema={items}
                     index={index}
                     removable={minItems < arr.length}
@@ -244,7 +247,7 @@ export default class VariableArray extends Component {
         return (
             <fieldset className="ui-field ui-field-array variant-array">
                 <header>{addButton}</header>
-                {fields}
+                <ul>{fields}</ul>
             </fieldset>
         );
 
@@ -253,6 +256,13 @@ export default class VariableArray extends Component {
 }
 
 VariableArray.displayName = 'VariableArray';
+
+VariableArray.propTypes = {
+    name: PropTypes.string.isRequired,
+    schema: PropTypes.object.isRequired,
+    uiSchema: PropTypes.object,
+    actions: PropTypes.object.isRequired
+};
 
 registerWidget(function (schema) {
 

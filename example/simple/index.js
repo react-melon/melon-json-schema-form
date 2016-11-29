@@ -41,23 +41,26 @@ const schema = {
             }
         },
         safeAnswers: {
+            title: '安全问题',
             type: 'array',
             items: {
                 type: 'object',
                 properties: {
                     question: {
                         type: 'string',
-                        title: 'question'
+                        title: 'question',
+                        minLength: 3
                     },
                     answer: {
                         type: 'string',
-                        title: 'answer'
+                        title: 'answer',
+                        minLength: 3
                     }
                 },
                 required: ['question', 'answer']
             },
-            minItems: 2,
-            maxItems: 4
+            minItems: 3,
+            maxItems: 3
         }
     },
     required: ['name', 'email']

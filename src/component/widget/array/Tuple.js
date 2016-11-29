@@ -8,8 +8,8 @@ import InputComponent from 'melon-core/InputComponent';
 import {createClassName} from 'melon-core/classname/classname';
 import shallowEqual from 'melon-core/util/shallowEqual';
 
-import {registerWidget, getWidget} from '../../factory';
-import resolveDefaults from '../../util/resolveDefaults';
+import {registerWidget, getWidget} from '../../../factory';
+import resolveDefaults from '../../../util/resolveDefaults';
 
 export class ArrayTupleItem extends Component {
 

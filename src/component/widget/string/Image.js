@@ -1,16 +1,15 @@
 /**
- * @file Color
+ * @file Image
  * @author leon <ludafa@outlook.com>
  */
 
 import React, {Component, PropTypes} from 'react';
-import ColorPicker from 'melon-colorpicker';
+import Uploader from 'melon/Uploader';
 import {createClassName} from 'melon-core/classname/classname';
 import shallowEqual from 'melon-core/util/shallowEqual';
+import {getUploaderHandler, registerWidget} from '../../../factory';
 
-import {registerWidget} from '../../factory';
-
-export default class ColorField extends Component {
+export default class Image extends Component {
 
     shouldComponentUpdate(nextProps) {
         return !shallowEqual(nextProps, this.props);
@@ -25,8 +24,6 @@ export default class ColorField extends Component {
             name
         } = this.props;
 
-        const title = schema.title;
-
         const titleClassName = createClassName(
             'ui-field-title',
             'variant-level-4'
@@ -34,18 +31,18 @@ export default class ColorField extends Component {
 
         return (
             <div className="ui-field ui-field-string variant-string">
-                <header className={titleClassName}>{title}</header>
-                <ColorPicker
+                <header className={titleClassName}>{schema.title}</header>
+                <Uploader
                     size="xxs"
-                    variants={['fluid']}
                     name={name}
+                    variants={['fluid']}
                     rules={schema}
+                    upload={getUploaderHandler()}
                     value={value}
-                    defaultValue={schema.default}
                     onChange={e => {
                         onChange({
                             ...e,
-                            pointer: e.targer.pointer
+                            pointer: e.target.pointer
                         });
                     }} />
             </div>
@@ -55,9 +52,7 @@ export default class ColorField extends Component {
 
 }
 
-ColorField.displayName = 'ColorField';
-
-ColorField.propTypes = {
+Image.propTypes = {
     schema: PropTypes.object.isRequired,
     value: PropTypes.string,
     onChange: PropTypes.func.isRequired
@@ -67,9 +62,10 @@ registerWidget(function (schema) {
 
     if (
         schema.type === 'string'
-        && schema.format === 'color'
+        && schema.media
+        && /^image\//.test(schema.media.type)
     ) {
-        return ColorField;
+        return Image;
     }
 
 });

@@ -4,7 +4,7 @@
  */
 
 import React, {Component, PropTypes} from 'react';
-import {registerWidget} from '../../factory';
+import {registerWidget} from '../../../factory';
 import {createClassName} from 'melon-core/classname/classname';
 import NumberBox from './NumberBox';
 import shallowEqual from 'melon-core/util/shallowEqual';

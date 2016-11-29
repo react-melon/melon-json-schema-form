@@ -4,16 +4,15 @@
   "description": "melon json schema form",
   "main": "lib/index.js",
   "scripts": {
-    "start": "node tools/server.js",
+    "start": "NODE_ENV=dev node tools/server.js",
     "build": "gulp build",
     "lint": "fecs src",
-    "rebuild": "gulp clean build",
-    "prepublish": "npm run lint && npm run rebuild",
+    "prepublish": "npm run lint && npm run build",
     "test": "NODE_ENV=test karma start ./test/karma.local.conf.js",
     "test-ci": "NODE_ENV=test karma start ./test/karma.travis.conf.js",
     "coveralls": "cat test/coverage/lcov/lcov.info | ./node_modules/.bin/coveralls",
     "docs": "esdoc -c esdoc.json",
-    "setup": "rimraf asset && webpack --config=tools/webpack.dll.js"
+    "setup": "rimraf asset && NODE_ENV=dev webpack --config=tools/webpack.dll.js"
   },
   "author": {
     "name": "ludafa",
@@ -40,6 +39,7 @@
     "babel-loader": "^6.2.5",
     "babel-plugin-external-helpers": "^6.8.0",
     "babel-plugin-external-helpers-insert-require": "^1.0.0",
+    "babel-plugin-istanbul": "^3.0.0",
     "babel-plugin-transform-es2015-modules-umd": "^6.12.0",
     "babel-plugin-transform-es3-member-expression-literals": "^6.8.0",
     "babel-plugin-transform-es3-property-literals": "^6.8.0",
@@ -48,8 +48,6 @@
     "babel-preset-react": "^6.11.1",
     "babel-preset-stage-2": "^6.13.0",
     "babelify": "^7.3.0",
-    "browserify": "^13.1.0",
-    "browserify-istanbul": "^2.0.0",
     "codemirror": "^5.19.0",
     "coveralls": "^2.11.12",
     "css-loader": "^0.24.0",
@@ -69,12 +67,12 @@
     "json-loader": "^0.5.4",
     "karma": "^1.2.0",
     "karma-babel-preprocessor": "^6.0.1",
-    "karma-browserify": "^5.1.0",
     "karma-browserstack-launcher": "^1.1.1",
     "karma-chrome-launcher": "^2.0.0",
     "karma-coverage": "^1.1.1",
     "karma-firefox-launcher": "^1.0.0",
     "karma-jasmine": "^1.0.2",
+    "karma-webpack": "^1.8.0",
     "nib": "^1.1.2",
     "react-addons-test-utils": "^0.14.8",
     "react-addons-update": "^0.14.8",
@@ -90,29 +88,43 @@
     "webpack-hot-middleware": "^2.12.2"
   },
   "babel": {
-    "presets": [
-      "es2015",
-      "stage-2",
-      "react"
-    ]
-  },
-  "babelBuild": {
-    "presets": [
-      [
-        "es2015",
-        {
-          "loose": true,
-          "modules": "umd"
-        }
-      ],
-      "stage-2",
-      "react"
-    ],
-    "plugins": [
-      "external-helpers",
-      "external-helpers-insert-require",
-      "transform-es3-property-literals",
-      "transform-es3-member-expression-literals"
-    ]
+    "env": {
+      "dev": {
+        "presets": [
+          "es2015",
+          "stage-2",
+          "react"
+        ]
+      },
+      "test": {
+        "presets": [
+          "es2015",
+          "stage-2",
+          "react"
+        ],
+        "plugins": [
+          "istanbul"
+        ]
+      },
+      "production": {
+        "presets": [
+          [
+            "es2015",
+            {
+              "loose": true,
+              "modules": "umd"
+            }
+          ],
+          "stage-2",
+          "react"
+        ],
+        "plugins": [
+          "external-helpers",
+          "external-helpers-insert-require",
+          "transform-es3-property-literals",
+          "transform-es3-member-expression-literals"
+        ]
+      }
+    }
   }
 }

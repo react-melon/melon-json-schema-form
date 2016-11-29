@@ -1,16 +1,16 @@
 /**
- * @file EnumTextField
+ * @file Date
  * @author leon <ludafa@outlook.com>
  */
 
 import React, {Component, PropTypes} from 'react';
-import Select from 'melon/Select';
+import Calendar from 'melon-calendar';
 import {createClassName} from 'melon-core/classname/classname';
 import shallowEqual from 'melon-core/util/shallowEqual';
 
-import {registerWidget} from '../../factory';
+import {registerWidget} from '../../../factory';
 
-export default class EnumTextField extends Component {
+export default class DateField extends Component {
 
     shouldComponentUpdate(nextProps) {
         return !shallowEqual(nextProps, this.props);
@@ -27,7 +27,8 @@ export default class EnumTextField extends Component {
 
         const {
             title,
-            enumNames
+            begin,
+            end
         } = schema;
 
         const titleClassName = createClassName(
@@ -38,25 +39,21 @@ export default class EnumTextField extends Component {
         return (
             <div className="ui-field ui-field-string variant-string">
                 <header className={titleClassName}>{title}</header>
-                <Select
+                <Calendar
                     size="xxs"
                     variants={['fluid']}
                     name={name}
                     rules={schema}
                     value={value}
                     defaultValue={schema.default}
+                    begin={begin}
+                    end={end}
                     onChange={e => {
                         onChange({
                             ...e,
                             pointer: e.target.pointer
                         });
-                    }}>
-                    {schema.enum.map((item, index) => (
-                        <option key={item} value={item}>
-                            {enumNames && enumNames[index] || item}
-                        </option>
-                    ))}
-                </Select>
+                    }} />
             </div>
         );
 
@@ -64,7 +61,7 @@ export default class EnumTextField extends Component {
 
 }
 
-EnumTextField.propTypes = {
+DateField.propTypes = {
     schema: PropTypes.object.isRequired,
     value: PropTypes.string,
     onChange: PropTypes.func.isRequired
@@ -74,9 +71,9 @@ registerWidget(function (schema) {
 
     if (
         schema.type === 'string'
-        && schema.enum
+        && schema.format === 'date'
     ) {
-        return EnumTextField;
+        return DateField;
     }
 
 });
