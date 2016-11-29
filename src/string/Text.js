@@ -27,21 +27,20 @@ export default class TextField extends Component {
             onChange({
                 type: 'change',
                 target: this.refs.textbox,
-                value: nextValue || value
+                value: nextValue
             });
         }
     }
 
     onBlur(e) {
 
-        const {value, onChange} = this.props;
         const target = e.target;
         const currentValue = target.getValue();
 
-        onChange({
+        this.props.onChange({
             type: 'change',
             target,
-            value: currentValue || value
+            value: currentValue
         });
 
     }
