@@ -67,7 +67,7 @@ app.get('/', (req, res) => {
 //     }));
 // }, app);
 
-const port = 8080;
+const port = process.env.PORT || 8080;
 
 app.listen(port, function () {
     console.log(`dev server start: http://localhost:${port}`);

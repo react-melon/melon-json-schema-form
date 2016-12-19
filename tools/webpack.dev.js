@@ -20,35 +20,45 @@ const config = Object.assign({}, require('./webpack.common'), {
         //     path.join(__dirname, '../example/configure/main.js')
         // ],
         simple: [
-            'webpack-hot-middleware/client',
-            'webpack/hot/only-dev-server',
             path.join(__dirname, '../example/simple/index.js')
         ]
     },
 
+    resolve: {
+        alias: {
+            'melon-form': path.join(__dirname, '../node_modules/melon-form/src/index.js')
+        },
+        fallback: path.join(__dirname, 'node_modules')
+    },
+
     module: {
-        loaders: [{
-            test: /\.js?$/,
-            loaders: [
-                'react-hot',
-                'babel?cacheDirectory'
-            ],
-            exclude: [
-                /node_modules/
-            ]
-        }, {
-            test: /\.styl$/,
-            loaders: ['style', 'css', 'stylus?paths=node_modules&resolve url']
-        }, {
-            test: /\.(svg|eot|ttf|woff|jpg|png)(\?.*)?$/,
-            loader: 'file?name=asset/[name].[ext]'
-        }, {
-            test: /\.json(\?.*)?$/,
-            loader: 'json'
-        }, {
-            test: /\.css$/,
-            loader: 'style!css'
-        }]
+        loaders: [
+            {
+                test: /\.js?$/,
+                loaders: [
+                    'babel?cacheDirectory'
+                ],
+                exclude: [
+                    /node_modules\/(?!(melon-form)\/).*/
+                ]
+            },
+            {
+                test: /\.styl$/,
+                loaders: ['style', 'css', 'stylus?paths=node_modules&resolve url']
+            },
+            {
+                test: /\.(svg|eot|ttf|woff|woff2|jpg|png)(\?.*)?$/,
+                loader: 'file?name=asset/[name].[ext]'
+            },
+            {
+                test: /\.json(\?.*)?$/,
+                loader: 'json'
+            },
+            {
+                test: /\.css$/,
+                loader: 'style!css'
+            }
+        ]
     },
 
     output: {
@@ -67,10 +77,6 @@ const config = Object.assign({}, require('./webpack.common'), {
         new webpack.DllReferencePlugin({
             context: '.',
             manifest: require('../asset/inf-manifest.json')
-        }),
-        new webpack.DllReferencePlugin({
-            context: '.',
-            manifest: require('../asset/hot-manifest.json')
         }),
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
@@ -111,9 +117,7 @@ const config = Object.assign({}, require('./webpack.common'), {
                 NODE_ENV: '"dev"'
             }
         }),
-        new HtmlWebpackHarddiskPlugin(),
-        new webpack.IgnorePlugin(/regenerator|nodent|js\-beautify/, /ajv/),
-        new webpack.IgnorePlugin(/locale/, /moment/)
+        new HtmlWebpackHarddiskPlugin()
     ]
 
 });

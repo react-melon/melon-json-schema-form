@@ -12,7 +12,8 @@ module.exports = {
     frameworks: ['jasmine'],
 
     files: [
-        'test/spec/**/*.spec.js'
+        'test/spec/util/schema.spec.js'
+        // 'test/spec/**/*.spec.js'
     ],
 
     browsers: [

@@ -15,6 +15,17 @@ html, body
     font-size: 16px;
     font-family: hack;
 
-#app
-    width: 45rem;
-    margin: 0 auto;
+
+.ui-app
+    display: flex
+    align-items: stretch;
+
+    >*
+        flex: 0 0 50%;
+        max-width: 50%;
+        box-sizing: border-box;
+        padding: 1rem;
+        white-space: pre-wrap;
+
+        &:nth-child(2)
+            border-left: 1px solid #bbb

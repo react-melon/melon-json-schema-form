@@ -30,53 +30,70 @@ export function resolveDefaults(schema) {
 
 export function fill(obj, schema) {
 
-    let fix = obj;
+    const {
+        default: def,
+        type
+    } = schema;
 
-    switch (schema.type) {
+    switch (type) {
 
         case 'object':
-            fix = typeof fix !== 'object' ? {} : fix;
+
+            // 如果不是一个对象，那么生成它
+            if (obj == null || typeof obj !== 'object') {
+
+                // 优先使用 schema.default，没有的话提供默认 {}
+                obj = def || {};
+
+            }
+
+            const {properties = {}, required = []} = schema;
 
             return Object
-                .keys(schema.properties)
+                .keys(properties)
                 .reduce(
                     (value, fieldName) => {
-                        value[fieldName] = fill(
+
+                        let defaultValue = fill(
                             value[fieldName],
                             schema.properties[fieldName]
                         );
+
+                        if (
+                            // default 没有 null 这个东西
+                            defaultValue != null
+                            // 是必填选
+                            || required.indexOf(fieldName) >= 0
+                        ) {
+                            value[fieldName] = defaultValue;
+                        }
+
                         return value;
                     },
-                    {...fix}
+                    {...obj}
                 );
 
 
         case 'array':
 
-            fix = Array.isArray(fix) ? fix : [];
+            if (!Array.isArray(obj)) {
+                obj = def || [];
+            }
 
             const items = schema.items;
 
             // tulpe
             if (Array.isArray(items)) {
-                return items.map((item, index) => fill(fix[index], item));
+                return items.map((item, index) => fill(obj[index], item));
             }
 
-            // 如果 value 中没有值，那么需要预先填充一个
-            if (!fix.length) {
-                fix.push(resolveDefaults(items));
-            }
-
-            return fix.map(term => fill(term, items));
+            // variable array
+            return obj.map(item => fill(item, items));
 
         case 'string':
-            return typeof fix === 'string' ? fix : (schema.default || '');
-
         case 'number':
-            return typeof fix === 'number' ? fix : (schema.default || 0);
-
         case 'boolean':
-            return typeof fix === 'boolean' ? fix : (schema.default || false);
+            return typeof obj === type ? obj : def;
 
     }
 

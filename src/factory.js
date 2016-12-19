@@ -5,13 +5,13 @@
 
 const providers = [];
 
-export function getWidget(schema) {
+export function getControl(schema) {
 
     for (let i = providers.length - 1; i >= 0; i--) {
         const provider = providers[i];
-        const Widget = provider(schema);
-        if (Widget) {
-            return Widget;
+        const Control = provider(schema);
+        if (Control) {
+            return Control;
         }
     }
 
@@ -19,7 +19,7 @@ export function getWidget(schema) {
 
 }
 
-export function registerWidget(type, Widget) {
+export function registerControl(type, Control) {
 
     if (typeof type === 'function') {
         providers.push(type);
@@ -28,19 +28,9 @@ export function registerWidget(type, Widget) {
     if (typeof type === 'string') {
         providers.push(function (schema) {
             if (schema.type === type) {
-                return Widget;
+                return Control;
             }
         });
     }
 
-}
-
-let imageUploadHandler = null;
-
-export function setUploadHandler(handler) {
-    imageUploadHandler = handler;
-}
-
-export function getUploaderHandler() {
-    return imageUploadHandler;
 }

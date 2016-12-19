@@ -1,41 +1,34 @@
 /**
- * @file Field
- * @author leon(ludafa@outlook.com)
+ * @file SchemaField
+ * @author leon <ludafa@outlook.com>
  */
 
-import React, {PropTypes} from 'react';
-import * as factory from '../factory';
-import {connectToForm} from '../util/connectToForm';
-import ValidityLabel from './ValidityLabel';
+import {createField} from 'melon-form';
+import React from 'react';
 
-/* eslint-disable fecs-prefer-class */
-/* eslint-disable fecs-valid-class-jsdoc */
-function Field(props) {
+function getControl(uiSchema) {
+
+    return uiSchema && typeof uiSchema.$control === 'function'
+        ? uiSchema.$control
+        : null;
+
+}
+
+function SchemaField(props) {
 
     const {
         schema,
-        value
+        uiSchema,
+        control,
+        ...rest
     } = props;
 
-    const Widget = factory.getWidget(schema, value);
-
+    const Control = getControl(uiSchema) || control;
 
     return (
-        <Widget {...props} />
+        <Control {...rest} schema={schema} uiSchema={uiSchema} />
     );
 
 }
 
-Field.propTypes = {
-    uiSchema: PropTypes.object,
-    schema: PropTypes.object.isRequired,
-    value: PropTypes.any,
-    meta: PropTypes.shape({
-        touched: PropTypes.bool.isRequired
-    }),
-    validity: ValidityLabel.propTypes.validity,
-    name: PropTypes.string.isRequired,
-    actions: PropTypes.object.isRequired
-};
-
-export default connectToForm(Field);
+export default createField(SchemaField);

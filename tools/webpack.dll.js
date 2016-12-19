@@ -26,14 +26,7 @@ module.exports = {
                         'codemirror/addon/selection/active-line',
                         'codemirror/mode/javascript/javascript'
                     ]
-                ),
-            hot: [
-                'sockjs-client',
-                'react-hot-api',
-                'react-hot-loader',
-                'json3',
-                'json5'
-            ]
+                )
         };
 
     })(require('../package.json'), require('./dll.json')),
@@ -57,7 +50,7 @@ module.exports = {
             test: /\.styl$/,
             loaders: ['style', 'css', 'stylus?paths=node_modules&resolve url']
         }, {
-            test: /\.(svg|eot|ttf|woff|jpg|png)(\?.*)?$/,
+            test: /\.(svg|eot|ttf|woff|woff2|jpg|png)(\?.*)?$/,
             loader: 'file?name=asset/[name].[ext]'
         }, {
             test: /\.json(\?.*)?$/,
