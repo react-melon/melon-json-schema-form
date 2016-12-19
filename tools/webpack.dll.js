@@ -26,14 +26,7 @@ module.exports = {
                         'codemirror/addon/selection/active-line',
                         'codemirror/mode/javascript/javascript'
                     ]
-                ),
-            hot: [
-                'sockjs-client',
-                'react-hot-api',
-                'react-hot-loader',
-                'json3',
-                'json5'
-            ]
+                )
         };
 
     })(require('../package.json'), require('./dll.json')),
@@ -48,7 +41,7 @@ module.exports = {
         loaders: [{
             test: /\.js?$/,
             loaders: [
-                'babel?presets[]=es2015,presets[]=react,presets[]=stage-1&cacheDirectory'
+                'babel?cacheDirectory'
             ],
             exclude: [
                 /node_modules/
@@ -57,7 +50,7 @@ module.exports = {
             test: /\.styl$/,
             loaders: ['style', 'css', 'stylus?paths=node_modules&resolve url']
         }, {
-            test: /\.(svg|eot|ttf|woff|jpg|png)(\?.*)?$/,
+            test: /\.(svg|eot|ttf|woff|woff2|jpg|png)(\?.*)?$/,
             loader: 'file?name=asset/[name].[ext]'
         }, {
             test: /\.json(\?.*)?$/,
@@ -76,8 +69,6 @@ module.exports = {
             // output.library option above
             name: '[name]'
         }),
-        new webpack.optimize.OccurenceOrderPlugin(),
-        new webpack.IgnorePlugin(/regenerator|nodent|js\-beautify/, /ajv/),
-        new webpack.IgnorePlugin(/locale/, /moment/)
+        new webpack.optimize.OccurenceOrderPlugin()
     ]
 };

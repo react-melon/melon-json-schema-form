@@ -1,47 +1,55 @@
 /**
- * @file melon-json-schema-form
- * @author leon(ludafa@outlook.com)
+ * @file melon json schema form
+ * @author leon <ludafa@outlook.com>
  */
 
-import Form from './Form';
-import Field from './Field';
+import ObjectControl from './component/controls/Object';
+import BooleanControl from './component/controls/Boolean';
 
-import ObjectField from './Object';
-import Boolean from './Boolean';
-import Number from './number/Number';
-import Range from './number/Range';
+import TextControl from './component/controls/string/Text';
+import ColorControl from './component/controls/string/Color';
+import DateControl from './component/controls/string/Date';
+import TimeControl from './component/controls/string/Time';
+import DateTimeControl from './component/controls/string/DateTime';
+import EnumControl from './component/controls/string/Enum';
+import RangeControl from './component/controls/string/Range';
 
-import Text from './string/Text';
-import Color from './string/Color';
-import DateField from './string/Date';
-import EnumText from './string/EnumText';
-import Image from './string/Image';
+import ImageControl from './component/controls/string/Image';
+import VariableArrayControl from './component/controls/array/VariableArray';
+import TupleControl from './component/controls/array/Tuple';
+import CheckBoxControl from './component/controls/array/CheckBox';
+import Control from './component/controls/Control';
 
-import VariableArray from './array/VariableArray';
-import Tuple from './array/Tuple';
-import CheckBox from './array/CheckBox';
-
-import resolveDefaults from './util/resolveDefaults';
-import * as pointer from './pointer';
-
-export * from './factory';
-
+import createForm from './createForm';
+import Field from './component/Field';
+import {fill} from './util/schema';
+import createReducer from './createReducer';
 
 export {
-    Form,
+
+    createForm,
+    createReducer,
     Field,
-    DateField as Date,
-    ObjectField as Object,
-    Boolean,
-    Range,
-    Number,
-    EnumText,
-    Color,
-    Image,
-    Text,
-    CheckBox,
-    Tuple,
-    VariableArray,
-    resolveDefaults,
-    pointer
+
+    // 具体组件
+    ObjectControl,
+    BooleanControl,
+    RangeControl,
+    TextControl,
+    ColorControl,
+    DateControl,
+    TimeControl,
+    DateTimeControl,
+    EnumControl,
+    ImageControl,
+    VariableArrayControl,
+    TupleControl,
+    CheckBoxControl,
+
+    // 工厂控件
+    Control,
+
+    // 工具 API
+    fill
+
 };

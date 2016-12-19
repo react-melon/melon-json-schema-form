@@ -4,32 +4,30 @@
  */
 
 const gulp = require('gulp');
-const babel = require('gulp-babel');
-const clean = require('gulp-clean');
-const babelOptions = require('./package.json').babelBuild || {};
-const babelHelpers = require('gulp-babel-external-helpers');
-
-const sourcemaps = require('gulp-sourcemaps');
-
-gulp.task('babel', function () {
-    return gulp.src('src/**/*.js')
-        .pipe(sourcemaps.init())
-        .pipe(babel(babelOptions))
-        .pipe(babelHelpers('babelHelpers.js', 'umd'))
-        .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest('lib'));
-});
+const webpack = require('webpack');
+const conf = require('./tools/webpack.prod');
+const gutil = require('gulp-util');
 
 gulp.task('stylus', function () {
     return gulp.src('src/**/*.styl').pipe(gulp.dest('lib'));
 });
 
-gulp.task('build', ['babel', 'stylus']);
+gulp.task('webpack', done => {
 
-gulp.task('clean', function () {
-    return gulp
-        .src('dist', {read: false})
-        .pipe(clean());
+    webpack(conf, (err, stats) => {
+
+        if (err) {
+            throw new gutil.PluginError('webpack', err);
+        }
+
+        gutil.log('[webpack]', stats.toString({}));
+
+        done();
+
+    });
+
 });
 
-gulp.task('rebuild', ['clean', 'build']);
+gulp.task('build', ['webpack', 'stylus']);
+
+gulp.task('default', ['build']);

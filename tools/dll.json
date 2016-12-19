@@ -25,12 +25,16 @@
         "melon-core/Form",
         "melon-core/InputComponent"
     ],
-    "numen": [
-        "numen/HashLocator"
-    ],
     "melon-calendar": [
         "melon-calendar/lib/RangeCalendar",
         "melon-calendar/lib/UnitCalendar",
         "melon-calendar/lib/Calendar"
+    ],
+    "shallow-equal": [
+        "shallow-equal/arrays",
+        "shallow-equal/objects"
+    ],
+    "ajv-i18n": [
+        "ajv-i18n/localize/zh"
     ]
 }

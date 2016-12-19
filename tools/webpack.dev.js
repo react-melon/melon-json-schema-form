@@ -13,35 +13,52 @@ const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 
 const config = Object.assign({}, require('./webpack.common'), {
 
-    entry: [
-        'webpack-hot-middleware/client',
-        'webpack/hot/only-dev-server',
-        path.join(__dirname, '../example/main.js')
-    ],
+    entry: {
+        // configure: [
+        //     'webpack-hot-middleware/client',
+        //     'webpack/hot/only-dev-server',
+        //     path.join(__dirname, '../example/configure/main.js')
+        // ],
+        simple: [
+            path.join(__dirname, '../example/simple/index.js')
+        ]
+    },
+
+    resolve: {
+        alias: {
+            'melon-form': path.join(__dirname, '../node_modules/melon-form/src/index.js')
+        },
+        fallback: path.join(__dirname, 'node_modules')
+    },
 
     module: {
-        loaders: [{
-            test: /\.js?$/,
-            loaders: [
-                'react-hot',
-                'babel?cacheDirectory'
-            ],
-            exclude: [
-                /node_modules/
-            ]
-        }, {
-            test: /\.styl$/,
-            loaders: ['style', 'css', 'stylus?paths=node_modules&resolve url']
-        }, {
-            test: /\.(svg|eot|ttf|woff|jpg|png)(\?.*)?$/,
-            loader: 'file?name=asset/[name].[ext]'
-        }, {
-            test: /\.json(\?.*)?$/,
-            loader: 'json'
-        }, {
-            test: /\.css$/,
-            loader: 'style!css'
-        }]
+        loaders: [
+            {
+                test: /\.js?$/,
+                loaders: [
+                    'babel?cacheDirectory'
+                ],
+                exclude: [
+                    /node_modules\/(?!(melon-form)\/).*/
+                ]
+            },
+            {
+                test: /\.styl$/,
+                loaders: ['style', 'css', 'stylus?paths=node_modules&resolve url']
+            },
+            {
+                test: /\.(svg|eot|ttf|woff|woff2|jpg|png)(\?.*)?$/,
+                loader: 'file?name=asset/[name].[ext]'
+            },
+            {
+                test: /\.json(\?.*)?$/,
+                loader: 'json'
+            },
+            {
+                test: /\.css$/,
+                loader: 'style!css'
+            }
+        ]
     },
 
     output: {
@@ -61,18 +78,31 @@ const config = Object.assign({}, require('./webpack.common'), {
             context: '.',
             manifest: require('../asset/inf-manifest.json')
         }),
-        new webpack.DllReferencePlugin({
-            context: '.',
-            manifest: require('../asset/hot-manifest.json')
-        }),
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
+        // new HtmlWebpackPlugin({
+        //     inject: true,
+        //     chunks: ['configure'],
+        //     templateContent: (function () {
+        //         return fs
+        //             .readFileSync(
+        //                 path.join(__dirname, '../example/configure/index.html'),
+        //                 'utf8'
+        //             )
+        //             .replace(/<!--@inject=([\w._-]+)-->/ig, function ($0, $1) {
+        //                 return `<script src="${$1}"></script>`;
+        //             });
+        //     })(),
+        //     filename: path.resolve(__dirname, '../asset/configure.html'),
+        //     alwaysWriteToDisk: true
+        // }),
         new HtmlWebpackPlugin({
             inject: true,
+            chunks: ['simple'],
             templateContent: (function () {
                 return fs
                     .readFileSync(
-                        path.join(__dirname, '../example/index.html'),
+                        path.join(__dirname, '../example/simple/index.html'),
                         'utf8'
                     )
                     .replace(/<!--@inject=([\w._-]+)-->/ig, function ($0, $1) {
@@ -82,9 +112,12 @@ const config = Object.assign({}, require('./webpack.common'), {
             filename: path.resolve(__dirname, '../asset/index.html'),
             alwaysWriteToDisk: true
         }),
-        new HtmlWebpackHarddiskPlugin(),
-        new webpack.IgnorePlugin(/regenerator|nodent|js\-beautify/, /ajv/),
-        new webpack.IgnorePlugin(/locale/, /moment/)
+        new webpack.DefinePlugin({
+            'process.env': {
+                NODE_ENV: '"dev"'
+            }
+        }),
+        new HtmlWebpackHarddiskPlugin()
     ]
 
 });
