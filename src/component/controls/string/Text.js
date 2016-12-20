@@ -68,10 +68,11 @@ export default class TextControl extends Component {
 
         const {
             touched,
-            error
+            error,
+            focus
         } = meta;
 
-        const invalid = touched && error && error.message;
+        const invalid = !focus && touched && error && error.message;
 
         const className = cx(
             'ui-control-text',

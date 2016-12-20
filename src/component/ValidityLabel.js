@@ -16,10 +16,11 @@ export default function ValidityLabel(props) {
 
     let {
         touched,
-        error
+        error,
+        focus
     } = props;
 
-    let message = touched && error ? error.message : '';
+    let message = !focus && touched && error ? error.message : '';
 
     let className = cx(
         'ui-control-validity-label',
