@@ -5,7 +5,7 @@
 
 import ReactDOM from 'react-dom';
 import React from 'react';
-import {createStore, combineReducers, applyMiddleware} from 'redux';
+import {createStore, combineReducers, applyMiddleware, compose} from 'redux';
 import {Provider} from 'react-redux';
 import {fill, createReducer} from '../../src/index';
 
@@ -18,6 +18,8 @@ import App from './App';
 
 import './index.styl';
 
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
 let store = createStore(
     combineReducers({
         [model]: createReducer(
@@ -25,12 +27,14 @@ let store = createStore(
             fill({flow: '1000', cost: '0'}, schema)
         )
     }),
-    applyMiddleware(
-        thunk,
-        logger({
-            collapsed: true,
-            logErrors: false
-        })
+    composeEnhancers(
+        applyMiddleware(
+            thunk,
+            logger({
+                collapsed: true,
+                logErrors: false
+            })
+        )
     )
 );
 

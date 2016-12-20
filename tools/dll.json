@@ -19,7 +19,11 @@
         "melon/Tooltip",
         "melon/Uploader",
         "melon/Table",
-        "melon-core/Form"
+        "melon-core/Form",
+        "melon/font/melon.woff",
+        "melon/font/melon.svg",
+        "melon/font/melon.woff2",
+        "melon/font/melon.ttf"
     ],
     "melon-core": [
         "melon-core/Form",

@@ -20,15 +20,16 @@ import TupleControl from './component/controls/array/Tuple';
 import CheckBoxControl from './component/controls/array/CheckBox';
 import Control from './component/controls/Control';
 
-import createForm from './createForm';
+import Form from './Form';
 import Field from './component/Field';
 import {fill} from './util/schema';
 import createReducer from './createReducer';
 
 export {
 
-    createForm,
     createReducer,
+
+    Form,
     Field,
 
     // 具体组件

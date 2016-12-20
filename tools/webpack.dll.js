@@ -19,13 +19,19 @@ module.exports = {
                         );
                     },
                     [
-                        'codemirror/addon/edit/closebrackets',
-                        'codemirror/addon/fold/brace-fold',
-                        'codemirror/addon/fold/foldgutter',
-                        'codemirror/addon/lint/lint',
-                        'codemirror/addon/selection/active-line',
-                        'codemirror/mode/javascript/javascript'
+                        'react-redux',
+                        'redux-logger',
+                        'redux-thunk',
+                        'deep-diff'
                     ]
+                    // [
+                    //     'codemirror/addon/edit/closebrackets',
+                    //     'codemirror/addon/fold/brace-fold',
+                    //     'codemirror/addon/fold/foldgutter',
+                    //     'codemirror/addon/lint/lint',
+                    //     'codemirror/addon/selection/active-line',
+                    //     'codemirror/mode/javascript/javascript'
+                    // ]
                 )
         };
 

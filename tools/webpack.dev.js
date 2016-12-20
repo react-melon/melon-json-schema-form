@@ -11,7 +11,7 @@ const fs = require('fs');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 
-const config = Object.assign({}, require('./webpack.common'), {
+const config = {
 
     entry: {
         // configure: [
@@ -120,7 +120,7 @@ const config = Object.assign({}, require('./webpack.common'), {
         new HtmlWebpackHarddiskPlugin()
     ]
 
-});
+};
 
 
 module.exports = config;
