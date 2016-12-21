@@ -4,30 +4,21 @@
  */
 
 const gulp = require('gulp');
-const webpack = require('webpack');
-const conf = require('./tools/webpack.prod');
-const gutil = require('gulp-util');
+const babel = require('gulp-babel');
+const sourcemaps = require('gulp-sourcemaps');
 
 gulp.task('stylus', function () {
     return gulp.src('src/**/*.styl').pipe(gulp.dest('lib'));
 });
 
-gulp.task('webpack', done => {
-
-    webpack(conf, (err, stats) => {
-
-        if (err) {
-            throw new gutil.PluginError('webpack', err);
-        }
-
-        gutil.log('[webpack]', stats.toString({}));
-
-        done();
-
-    });
-
+gulp.task('babel', function () {
+    return gulp.src('src/**/*.js')
+        .pipe(sourcemaps.init())
+        .pipe(babel())
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest('lib'));
 });
 
-gulp.task('build', ['webpack', 'stylus']);
+gulp.task('build', ['babel', 'stylus']);
 
 gulp.task('default', ['build']);
