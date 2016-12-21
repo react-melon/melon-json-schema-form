@@ -11,18 +11,17 @@ const fs = require('fs');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 
+const pages = ['simple', 'dynamic'];
+
 const config = {
 
-    entry: {
-        // configure: [
-        //     'webpack-hot-middleware/client',
-        //     'webpack/hot/only-dev-server',
-        //     path.join(__dirname, '../example/configure/main.js')
-        // ],
-        simple: [
-            path.join(__dirname, '../example/simple/index.js')
-        ]
-    },
+    entry: pages.reduce(
+        (conf, name) => {
+            conf[name] = path.join(__dirname, `../example/${name}/index.js`);
+            return conf;
+        },
+        {}
+    ),
 
     resolve: {
         alias: {
@@ -80,38 +79,22 @@ const config = {
         }),
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
-        // new HtmlWebpackPlugin({
-        //     inject: true,
-        //     chunks: ['configure'],
-        //     templateContent: (function () {
-        //         return fs
-        //             .readFileSync(
-        //                 path.join(__dirname, '../example/configure/index.html'),
-        //                 'utf8'
-        //             )
-        //             .replace(/<!--@inject=([\w._-]+)-->/ig, function ($0, $1) {
-        //                 return `<script src="${$1}"></script>`;
-        //             });
-        //     })(),
-        //     filename: path.resolve(__dirname, '../asset/configure.html'),
-        //     alwaysWriteToDisk: true
-        // }),
-        new HtmlWebpackPlugin({
+        ...pages.map(page => new HtmlWebpackPlugin({
             inject: true,
-            chunks: ['simple'],
+            chunks: [page],
             templateContent: (function () {
                 return fs
                     .readFileSync(
-                        path.join(__dirname, '../example/simple/index.html'),
+                        path.join(__dirname, `../example/${page}/index.html`),
                         'utf8'
                     )
                     .replace(/<!--@inject=([\w._-]+)-->/ig, function ($0, $1) {
                         return `<script src="${$1}"></script>`;
                     });
             })(),
-            filename: path.resolve(__dirname, '../asset/index.html'),
+            filename: path.resolve(__dirname, `../asset/${page}.html`),
             alwaysWriteToDisk: true
-        }),
+        })),
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: '"dev"'
@@ -121,6 +104,5 @@ const config = {
     ]
 
 };
-
 
 module.exports = config;

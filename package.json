@@ -1,6 +1,6 @@
 {
   "name": "melon-json-schema-form",
-  "version": "2.0.0-alpha.3",
+  "version": "2.0.0-alpha.4",
   "description": "melon json schema form",
   "main": "lib/index.js",
   "scripts": {
@@ -34,7 +34,7 @@
     "melon": "^0.4.3",
     "melon-calendar": "^1.0.5",
     "melon-colorpicker": "^1.0.9",
-    "melon-form": "^1.0.0-alpha.2",
+    "melon-form": "^1.0.0-alpha.6",
     "melon-timepicker": "^1.0.2",
     "moment": "^2.17.1",
     "react": "^15.4.1",
