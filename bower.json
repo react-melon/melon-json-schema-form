@@ -1,6 +1,6 @@
 {
   "name": "melon-json-schema-form",
-  "version": "2.0.0-alpha.5",
+  "version": "2.0.0-alpha.6",
   "description": "melon json schema form",
   "main": "lib/index.js",
   "license": "MIT",
