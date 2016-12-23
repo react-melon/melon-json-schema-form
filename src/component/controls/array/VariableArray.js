@@ -250,7 +250,7 @@ export default class VariableArray extends Component {
                         key={key}
                         name={key}
                         schema={items}
-                        uiSchema={uiSchema.$items}
+                        uiSchema={uiSchema && uiSchema.$items}
                         index={index}
                         removable={minItems < arr.length}
                         downable={index < arr.length - 1}

@@ -7,10 +7,6 @@ export function format(value, props) {
 
     let schema = props.schema;
 
-    value = value == null && schema.default
-        ? schema.default
-        : value;
-
     switch (schema.type) {
 
         case 'string':

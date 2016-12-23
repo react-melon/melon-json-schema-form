@@ -19,7 +19,7 @@ export default function Control(props) {
 
     if (process.env.NODE_ENV === 'dev') {
         if (!Control) {
-            throw new Error('no control match schema: %o', props.schema);
+            throw new Error(`no control match schema: \n${JSON.stringify(props.schema, 0, 2)}`);
         }
     }
 
