@@ -74,7 +74,7 @@ export default class DateControl extends Component {
                 {
                     description
                         ? <p
-                            className="ui-control-date-decription">
+                            className="ui-control-date-description">
                             {description}
                         </p>
                         : null

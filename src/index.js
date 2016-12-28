@@ -20,6 +20,8 @@ import TupleControl from './component/controls/array/Tuple';
 import CheckBoxControl from './component/controls/array/CheckBox';
 import Control from './component/controls/Control';
 
+import ValidityLabel from './component/ValidityLabel';
+
 import Form from './Form';
 import Field from './component/Field';
 import {fill} from './util/schema';
@@ -31,6 +33,7 @@ export {
 
     Form,
     Field,
+    ValidityLabel,
 
     // 具体组件
     ObjectControl,
