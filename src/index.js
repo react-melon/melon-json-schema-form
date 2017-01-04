@@ -26,6 +26,7 @@ import Form from './Form';
 import Field from './component/Field';
 import {fill} from './util/schema';
 import createReducer from './createReducer';
+import {getControl, registerControl} from './factory';
 
 export {
 
@@ -54,6 +55,8 @@ export {
     Control,
 
     // 工具 API
-    fill
+    fill,
+    getControl,
+    registerControl
 
 };
