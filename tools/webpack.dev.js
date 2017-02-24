@@ -23,13 +23,6 @@ const config = {
         {}
     ),
 
-    resolve: {
-        alias: {
-            'melon-form': path.join(__dirname, '../node_modules/melon-form/src/index.js')
-        },
-        fallback: path.join(__dirname, 'node_modules')
-    },
-
     module: {
         loaders: [
             {
@@ -43,7 +36,7 @@ const config = {
             },
             {
                 test: /\.styl$/,
-                loaders: ['style', 'css', 'stylus?paths=node_modules&resolve url']
+                loaders: ['style', 'css', 'stylus?paths=node_modules&resolve url&include css']
             },
             {
                 test: /\.(svg|eot|ttf|woff|woff2|jpg|png)(\?.*)?$/,

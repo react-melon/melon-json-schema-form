@@ -5,6 +5,7 @@
 
 import Ajv from 'ajv';
 import localize from 'ajv-i18n/localize/zh';
+import kolor from 'kolor';
 
 const validator = new Ajv({
     allErrors: true,
@@ -12,7 +13,11 @@ const validator = new Ajv({
     coerceTypes: false
 });
 
-validator.addFormat('color', /^#[0-9a-fA-F]{6}$/i);
+validator.addFormat('color', {
+    validate(value) {
+        return !!kolor(value);
+    }
+});
 
 validator.addFormat('date', {
     validate(value) {
