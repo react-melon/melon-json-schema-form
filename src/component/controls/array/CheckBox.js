@@ -7,8 +7,8 @@ import React, {Component, PropTypes} from 'react';
 import BoxGroup from 'melon/BoxGroup';
 import shallowEqual from 'melon-core/util/shallowEqual';
 import {registerControl} from '../../../factory';
-import cx from 'classnames';
 import ValidityLabel from '../../ValidityLabel';
+import createStateClassName from '../../../util/createStateClassName';
 
 export default class ArrayCheckBox extends Component {
 
@@ -33,7 +33,9 @@ export default class ArrayCheckBox extends Component {
         const {
             schema,
             value,
-            meta
+            meta,
+            disabled,
+            readOnly
         } = this.props;
 
         const {
@@ -61,16 +63,13 @@ export default class ArrayCheckBox extends Component {
 
         const invalid = touched && error && error.message;
 
-        const className = cx(
+        const className = createStateClassName(
             'ui-control-checkbox',
-            {
-                'state-valid': !invalid,
-                'state-invalid': invalid
-            }
+            this.props
         );
 
         const variants = [
-            items.enum.length > 3 ? 'horizontal' : null,
+            items.enum.length > 3 ? 'horizontal' : null
         ];
 
         return (
@@ -98,7 +97,9 @@ export default class ArrayCheckBox extends Component {
                     variants={variants}
                     states={{invalid}}
                     value={value}
-                    onChange={this.onChange}>
+                    onChange={this.onChange}
+                    disabled={disabled}
+                    readOnly={readOnly}>
                     {options}
                 </BoxGroup>
                 <ValidityLabel {...meta} />

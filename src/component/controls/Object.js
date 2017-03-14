@@ -10,6 +10,7 @@ import Control from './Control';
 import Field from '../Field';
 import {getOrderedKeys} from '../../util/getOrderedKeys';
 import {format} from '../../util/field';
+import cx from 'classnames';
 
 /**
  * ObjectControl
@@ -28,13 +29,14 @@ export default class ObjectControl extends Component {
         const {
             schema,
             uiSchema,
-            name
+            name,
+            disabled,
+            readOnly,
+            hidden,
+            meta = {}
         } = this.props;
 
-        const {
-            title,
-            properties
-        } = schema;
+        const {title, description, properties} = schema;
 
         const keys = uiSchema.$order
             ? getOrderedKeys(properties, uiSchema.$order)
@@ -53,13 +55,27 @@ export default class ObjectControl extends Component {
                         uiSchema={uiSchema[childName]}
                         control={Control}
                         format={format}
+                        disabled={disabled}
+                        readOnly={readOnly}
                     />
                 );
 
             });
 
+        const {touched, error} = meta;
+        const invalid = touched && error && error.message;
+
+        const className = cx(
+            'ui-control-object',
+            {
+                'state-valid': !invalid,
+                'state-invalid': invalid,
+                'state-hidden': hidden
+            }
+        );
+
         return (
-            <div className="ui-control-object">
+            <div className={className}>
                 {
                     title
                         ? (
@@ -67,6 +83,15 @@ export default class ObjectControl extends Component {
                                 className="ui-control-object-title">
                                 {title}
                             </header>
+                        )
+                        : null
+                }
+                {
+                    description
+                        ? (
+                            <p className="ui-control-object-description">
+                                {description}
+                            </p>
                         )
                         : null
                 }

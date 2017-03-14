@@ -8,7 +8,7 @@ import Uploader from 'melon/Uploader';
 import shallowEqual from 'melon-core/util/shallowEqual';
 import {registerControl} from '../../../factory';
 import ValidityLabel from '../../ValidityLabel';
-import cx from 'classnames';
+import createStateClassName from '../../../util/createStateClassName';
 
 export default class Image extends Component {
 
@@ -37,14 +37,11 @@ export default class Image extends Component {
             error
         } = meta;
 
-        const valid = touched && error && error.message;
+        const invalid = touched && error && error.message;
 
-        const className = cx(
+        const className = createStateClassName(
             'ui-control-image',
-            {
-                'state-valid': valid,
-                'state-invalid': !valid
-            }
+            this.props
         );
 
         return (
@@ -69,20 +66,10 @@ export default class Image extends Component {
                     size="xxs"
                     variants={['fluid']}
                     style={{maxWidth: '100%'}}
+                    states={{invalid}}
                     uploading={pending}
-                    onFileChange={file => {
-
-                        if (!file) {
-                            actions.change(name, '');
-                            return;
-                        }
-
-                        actions.upload(name, file);
-
-                    }}
-                    onUploadCancel={() => {
-                        actions.stopPending(name);
-                    }}
+                    onFileChange={file => (file ? actions.upload(name, file) : actions.change(name, ''))}
+                    onUploadCancel={() => actions.stopPending(name)}
                     value={value} />
                 <ValidityLabel {...meta} />
             </div>

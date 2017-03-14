@@ -8,7 +8,7 @@ import Calendar from 'melon-calendar';
 import TimePicker from 'melon-timepicker';
 import {registerControl} from '../../../factory';
 import moment from 'moment';
-import cx from 'classnames';
+import createStateClassName from '../../../util/createStateClassName';
 import ValidityLabel from '../../ValidityLabel';
 
 /**
@@ -45,15 +45,9 @@ export default function DateTimeControl(props) {
         touched
     } = meta;
 
-    let message = touched && error ? error.message : null;
+    let invalid = touched && error && error.message;
 
-    let className = cx(
-        'ui-control-datetime',
-        {
-            'state-valid': !message,
-            'state-invalid': message
-        }
-    );
+    let className = createStateClassName('ui-control-datetime', props);
 
     return (
         <div className={className}>
@@ -79,6 +73,7 @@ export default function DateTimeControl(props) {
                     value={date}
                     begin={formatMinimum}
                     end={formatMaximum}
+                    states={{invalid}}
                     onChange={e => {
                         actions.change(name, `${e.value} ${time}`);
                         actions.validate(name);
@@ -86,6 +81,7 @@ export default function DateTimeControl(props) {
                 <TimePicker
                     size="xs"
                     value={time}
+                    states={{invalid}}
                     onChange={e => {
                         actions.change(name, `${date} ${e.value}`);
                         actions.validate(name);

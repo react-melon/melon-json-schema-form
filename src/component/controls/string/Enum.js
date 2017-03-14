@@ -6,9 +6,9 @@
 import React, {Component, PropTypes} from 'react';
 import Select from 'melon/Select';
 import shallowEqual from 'melon-core/util/shallowEqual';
-import cx from 'classnames';
 import ValidityLabel from '../../ValidityLabel';
 import {registerControl} from '../../../factory';
+import createStateClassName from '../../../util/createStateClassName';
 
 export default class EnumTextField extends Component {
 
@@ -23,7 +23,9 @@ export default class EnumTextField extends Component {
             value,
             name,
             actions,
-            meta
+            meta,
+            disabled,
+            readOnly
         } = this.props;
 
         const {
@@ -39,12 +41,9 @@ export default class EnumTextField extends Component {
 
         const valid = touched && error && error.message;
 
-        const className = cx(
+        const className = createStateClassName(
             'ui-control-enum',
-            {
-                'state-invalid': !valid,
-                'state-valid': valid
-            }
+            this.props
         );
 
         return (
@@ -66,9 +65,12 @@ export default class EnumTextField extends Component {
                         : null
                 }
                 <Select
+                    disabled={disabled}
+                    readOnly={readOnly}
                     size="xxs"
                     variants={['fluid']}
                     name={name}
+                    states={{valid}}
                     value={value == null ? schema.defaultValue : value}
                     onChange={e => {
                         actions.change(name, e.value);

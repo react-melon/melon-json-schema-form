@@ -47,26 +47,6 @@ app.get('/', (req, res) => {
     });
 });
 
-// proxy config: not used yet
-// const url = require('url');
-// const proxy = require('express-http-proxy');
-//
-// [
-//     '/activity',
-//     '/page',
-//     '/goods',
-//     '/image',
-//     '/account',
-//     '/token',
-//     '/template'
-// ].reduce(function (app, name) {
-//     return app.use(name, proxy('http://localhost:8088', {
-//         forwardPath(req, res) {
-//             return `${name}${url.parse(req.url).path}`;
-//         }
-//     }));
-// }, app);
-
 const port = process.env.PORT || 8080;
 
 app.listen(port, function () {

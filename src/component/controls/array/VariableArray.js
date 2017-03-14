@@ -11,9 +11,9 @@ import Field from '../../Field';
 import Control from '../Control';
 import {registerControl} from '../../../factory';
 import {format} from '../../../util/field';
-import cx from 'classnames';
 import ValidityLabel from '../../ValidityLabel';
 import {fill} from '../../../util/schema';
+import createStateClassName from '../../../util/createStateClassName';
 
 export class VariableArrayItem extends Component {
 
@@ -73,7 +73,9 @@ export class VariableArrayItem extends Component {
             name,
             removable,
             downable,
-            index
+            index,
+            disabled,
+            readOnly
         } = this.props;
 
         const upButton = index
@@ -126,6 +128,8 @@ export class VariableArrayItem extends Component {
                 {title}
                 <div className="ui-control-variable-array-item-content">
                     <Field
+                        disabled={disabled}
+                        readOnly={readOnly}
                         name={name}
                         schema={schema}
                         uiSchema={uiSchema}
@@ -215,7 +219,9 @@ export default class VariableArray extends Component {
             schema,
             value,
             uiSchema,
-            meta
+            meta,
+            disabled,
+            readOnly
         } = this.props;
 
         const {
@@ -230,9 +236,10 @@ export default class VariableArray extends Component {
             value = [];
         }
 
-        const addButton = maxItems > value.length
+        const addButton = !readOnly && maxItems > value.length
             ? (
                 <Button
+                    disabled={disabled}
                     type="button"
                     size="xxs"
                     variants={['icon', 'info']}
@@ -252,9 +259,11 @@ export default class VariableArray extends Component {
                         schema={items}
                         uiSchema={uiSchema && uiSchema.$items}
                         index={index}
-                        removable={minItems < arr.length}
-                        downable={index < arr.length - 1}
-                        upable={index > 1}
+                        disabled={disabled}
+                        readOnly={readOnly}
+                        removable={!disabled && !readOnly && minItems < arr.length}
+                        downable={!disabled && !readOnly && index < arr.length - 1}
+                        upable={!disabled && !readOnly && index > 1}
                         onUpward={this.onFieldUpward}
                         onDownward={this.onFieldDownward}
                         onRemove={this.onFieldRemove} />
@@ -263,6 +272,7 @@ export default class VariableArray extends Component {
             : (
                 <p className="ui-control-variable-array-empty-list">
                     <Button
+                        disabled={disabled || readOnly}
                         type="button"
                         size="xs"
                         variants={['info']}
@@ -270,19 +280,9 @@ export default class VariableArray extends Component {
                 </p>
             );
 
-        const {
-            touched,
-            error
-        } = meta;
-
-        const invalid = touched && error && error.message;
-
-        const className = cx(
+        const className = createStateClassName(
             'ui-control-variable-array',
-            {
-                'state-invalid': invalid,
-                'state-valid': !invalid
-            }
+            this.props
         );
 
         return (

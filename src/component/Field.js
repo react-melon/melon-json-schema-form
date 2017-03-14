@@ -14,19 +14,40 @@ function getControl(uiSchema) {
 
 }
 
+/**
+ * SchemaField
+ *
+ * @class
+ * @param {*} props 属性
+ */
 function SchemaField(props) {
 
     const {
         schema,
-        uiSchema,
+        uiSchema = {},
         control,
+        disabled,
+        readOnly,
+        hidden,
         ...rest
     } = props;
 
     const Control = getControl(uiSchema) || control;
 
+    const {
+        $disabled,
+        $readOnly,
+        $hidden
+    } = uiSchema;
+
     return (
-        <Control {...rest} schema={schema} uiSchema={uiSchema} />
+        <Control
+            {...rest}
+            schema={schema}
+            uiSchema={uiSchema}
+            disabled={disabled || $disabled}
+            readOnly={readOnly || $readOnly}
+            hidden={hidden || $hidden} />
     );
 
 }

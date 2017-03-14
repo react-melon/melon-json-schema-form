@@ -19,6 +19,13 @@ export default {
             type: 'string',
             title: '描述'
         },
+        sex: {
+            'type': 'string',
+            'title': '性别',
+            'enum': ['male', 'female'],
+            'enumNames': ['男', '女'],
+            'default': 'male'
+        },
         agree: {
             type: 'boolean',
             title: '同意',
@@ -112,13 +119,13 @@ export default {
             }
         },
         cost: {
-            title: '抽奖消耗的金币数 (0-20)',
-            type: 'string',
-            format: 'numeric',
-            formatMaximum: '20',
-            formatMinimum: '0',
-            step: 1,
-            default: '0'
+            'title': '抽奖消耗的金币数 (0-20)',
+            'type': 'string',
+            'format': 'numeric',
+            'formatMaximum': '20',
+            'formatMinimum': '0',
+            'step': 1,
+            'default': '0'
         },
         noGoldMessage: {
             'title': '金币不足时的提示语',

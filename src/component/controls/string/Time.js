@@ -6,7 +6,15 @@
 import React from 'react';
 import TimePicker from 'melon-timepicker';
 import {registerControl} from '../../../factory';
+import ValidityLabel from '../../ValidityLabel';
+import createStateClassName from '../../../util/createStateClassName';
 
+/**
+ * 时间选择器
+ *
+ * @class
+ * @param {*} props 属性
+ */
 export function TimeControl(props) {
 
     const {
@@ -14,7 +22,9 @@ export function TimeControl(props) {
         value,
         meta,
         actions,
-        schema
+        schema,
+        disabled,
+        readOnly
     } = props;
 
     const {
@@ -27,12 +37,12 @@ export function TimeControl(props) {
         touched
     } = meta;
 
-    const message = touched && error
-        ? <div>{error}</div>
-        : null;
+    const invalid = touched && error && error.message;
+
+    const className = createStateClassName('ui-control-time', props);
 
     return (
-        <div className="ui-control-time">
+        <div className={className}>
             {
                 title
                     ? <header
@@ -50,11 +60,14 @@ export function TimeControl(props) {
                     : null
             }
             <TimePicker
+                disabled={disabled}
+                readOnly={readOnly}
                 size="xxs"
+                states={{invalid}}
                 value={value == null ? schema.default : value}
                 onChange={e => actions.change(name, e.value)}
             />
-            {message}
+            <ValidityLabel {...meta} />
         </div>
     );
 

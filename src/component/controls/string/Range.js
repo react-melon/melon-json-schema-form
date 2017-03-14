@@ -7,8 +7,8 @@ import React, {PropTypes, Component} from 'react';
 import Slider from 'melon/Slider';
 import {registerControl} from '../../../factory';
 import shallowEqual from 'melon-core/util/shallowEqual';
-import cx from 'classnames';
 import ValidityLabel from '../../ValidityLabel';
+import createStateClassName from '../../../util/createStateClassName';
 
 export default class Range extends Component {
 
@@ -40,12 +40,11 @@ export default class Range extends Component {
 
         value = isNaN(+value) ? formatMinimum : value;
 
-        let className = cx(
+        let invalid = touched && error && error.message;
+
+        let className = createStateClassName(
             'ui-control-range',
-            {
-                'state-invalid': touched && error,
-                'state-valid': touched && !error
-            }
+            this.props
         );
 
         return (
@@ -73,6 +72,7 @@ export default class Range extends Component {
                     value={+value}
                     maximum={+formatMaximum}
                     minimum={+formatMinimum}
+                    states={{invalid}}
                     onChange={e => {
                         actions.change(name, e.value + '');
                         actions.validate(name);

@@ -7,7 +7,7 @@ import React, {Component, PropTypes} from 'react';
 import Calendar from 'melon-calendar';
 import {registerControl} from '../../../factory';
 import ValidityLabel from '../../ValidityLabel';
-import cx from 'classnames';
+import createStateClassName from '../../../util/createStateClassName';
 
 export default class DateControl extends Component {
 
@@ -38,7 +38,9 @@ export default class DateControl extends Component {
         const {
             schema,
             value,
-            meta
+            meta,
+            disabled,
+            readOnly
         } = this.props;
 
         const {
@@ -53,12 +55,9 @@ export default class DateControl extends Component {
 
         const invalid = touched && error && error.message;
 
-        const className = cx(
+        const className = createStateClassName(
             'ui-control-date',
-            {
-                'state-valid': !invalid,
-                'state-invalid': invalid
-            }
+            this.props
         );
 
         return (
@@ -80,6 +79,8 @@ export default class DateControl extends Component {
                         : null
                 }
                 <Calendar
+                    disabled={disabled}
+                    readOnly={readOnly}
                     size="xxs"
                     variants={['fluid']}
                     states={{invalid}}

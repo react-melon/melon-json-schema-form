@@ -7,8 +7,8 @@ import React, {Component, PropTypes} from 'react';
 import ColorPicker from 'melon-colorpicker';
 import shallowEqual from 'melon-core/util/shallowEqual';
 import {registerControl} from '../../../factory';
-import cx from 'classnames';
 import ValidityLabel from '../../ValidityLabel';
+import createStateClassName from '../../../util/createStateClassName';
 
 export default class ColorControl extends Component {
 
@@ -44,7 +44,9 @@ export default class ColorControl extends Component {
             schema,
             value,
             name,
-            meta
+            meta,
+            disabled,
+            readOnly
         } = this.props;
 
         const {
@@ -59,12 +61,9 @@ export default class ColorControl extends Component {
 
         const invalid = touched && error && error.message;
 
-        const className = cx(
+        const className = createStateClassName(
             'ui-control-color',
-            {
-                'state-valid': !invalid,
-                'state-invalid': invalid
-            }
+            this.props
         );
 
         return (
@@ -86,6 +85,8 @@ export default class ColorControl extends Component {
                         : null
                 }
                 <ColorPicker
+                    disabled={disabled}
+                    readOnly={readOnly}
                     size="xxs"
                     variants={['fluid']}
                     states={{invalid}}

@@ -7,8 +7,8 @@ import React, {Component} from 'react';
 import {registerControl} from '../../../factory';
 import shallowEqual from 'melon-core/util/shallowEqual';
 import TextBox from 'melon/TextBox';
-import cx from 'classnames';
 import ValidityLabel from '../../ValidityLabel';
+import createStateClassName from '../../../util/createStateClassName';
 
 export default class TextControl extends Component {
 
@@ -56,7 +56,9 @@ export default class TextControl extends Component {
             schema,
             value,
             name,
-            meta
+            meta,
+            disabled,
+            readOnly
         } = this.props;
 
 
@@ -74,12 +76,9 @@ export default class TextControl extends Component {
 
         const invalid = !focus && touched && error && error.message;
 
-        const className = cx(
+        const className = createStateClassName(
             'ui-control-text',
-            {
-                'state-invalid': invalid,
-                'state-valid': !invalid
-            }
+            this.props
         );
 
         return (
@@ -103,6 +102,8 @@ export default class TextControl extends Component {
                         : null
                 }
                 <TextBox
+                    disabled={disabled}
+                    readOnly={readOnly}
                     variants={['fluid']}
                     states={{invalid}}
                     size="xs"

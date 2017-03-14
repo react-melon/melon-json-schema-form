@@ -7,8 +7,8 @@ import React, {Component, PropTypes} from 'react';
 import Toggle from 'melon/Toggle';
 import * as factory from '../../factory';
 import shallowEqual from 'melon-core/util/shallowEqual';
-import cx from 'classnames';
 import ValidityLabel from '../ValidityLabel';
+import createStateClassName from '../../util/createStateClassName';
 
 export const type = 'Boolean';
 
@@ -44,19 +44,18 @@ export default class BooleanField extends Component {
         const {
             value,
             schema,
-            meta
+            meta,
+            disabled,
+            readOnly
         } = this.props;
 
         const {title, description} = schema;
         const {touched, error} = meta;
         const invalid = touched && error && error.message;
 
-        const className = cx(
+        const className = createStateClassName(
             'ui-control-boolean',
-            {
-                'state-valid': !invalid,
-                'state-invalid': invalid
-            }
+            this.props
         );
 
         return (
@@ -81,6 +80,8 @@ export default class BooleanField extends Component {
                 }
                 <div className="ui-control-boolean-content">
                     <Toggle
+                        disabled={disabled}
+                        readOnly={readOnly}
                         trueValue={true}
                         falseValue={false}
                         states={{invalid}}

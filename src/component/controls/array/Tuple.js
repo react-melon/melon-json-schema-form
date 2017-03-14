@@ -8,8 +8,8 @@ import Control from '../Control';
 import {registerControl} from '../../../factory';
 import {format} from '../../../util/field';
 import Field from '../../Field';
-import cx from 'classnames';
 import Validity from '../../ValidityLabel';
+import createStateClassName from '../../../util/createStateClassName';
 
 /* eslint-disable fecs-prefer-class */
 
@@ -25,7 +25,9 @@ export default function Tuple(props) {
         name,
         schema,
         uiSchema,
-        meta
+        meta,
+        disabled,
+        readOnly
     } = props;
 
     const {
@@ -34,19 +36,9 @@ export default function Tuple(props) {
         description
     } = schema;
 
-    const {
-        touched,
-        error
-    } = meta;
-
-    const invalid = touched && error && error.message;
-
-    const className = cx(
+    const className = createStateClassName(
         'ui-control-tuple',
-        {
-            'state-valid': !invalid,
-            'state-invalid': invalid
-        }
+        props
     );
 
     return (
@@ -80,7 +72,9 @@ export default function Tuple(props) {
                                 schema={item}
                                 name={key}
                                 control={Control}
-                                format={format} />
+                                format={format}
+                                disabled={disabled}
+                                readOnly={readOnly} />
                         </li>
                     );
                 })}
