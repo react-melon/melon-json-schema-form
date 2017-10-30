@@ -3,10 +3,10 @@
  * @author leon <ludafa@outlook.com>
  */
 
-import React, {PropTypes, Component} from 'react';
+import React, {PureComponent} from 'react';
+import PropTypes from 'prop-types';
 import Button from 'melon/Button';
 import Icon from 'melon/Icon';
-import shallowEqual from 'melon-core/util/shallowEqual';
 import Field from '../../Field';
 import Control from '../Control';
 import {registerControl} from '../../../factory';
@@ -15,17 +15,13 @@ import ValidityLabel from '../../ValidityLabel';
 import {fill} from '../../../util/schema';
 import createStateClassName from '../../../util/createStateClassName';
 
-export class VariableArrayItem extends Component {
+export class VariableArrayItem extends PureComponent {
 
     constructor(...args) {
         super(...args);
         this.onRemove = this.onRemove.bind(this);
         this.onUpward = this.onUpward.bind(this);
         this.onDownward = this.onDownward.bind(this);
-    }
-
-    shouldComponentUpdate(nextProps) {
-        return !shallowEqual(nextProps, this.props);
     }
 
     onUpward(e) {
@@ -153,7 +149,7 @@ VariableArrayItem.propTypes = {
     onRemove: PropTypes.func
 };
 
-export default class VariableArray extends Component {
+export default class VariableArray extends PureComponent {
 
     constructor(...args) {
         super(...args);

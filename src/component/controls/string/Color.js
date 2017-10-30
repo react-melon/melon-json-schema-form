@@ -3,22 +3,18 @@
  * @author leon <ludafa@outlook.com>
  */
 
-import React, {Component, PropTypes} from 'react';
+import React, {PureComponent} from 'react';
+import PropTypes from 'prop-types';
 import ColorPicker from 'melon-colorpicker';
-import shallowEqual from 'melon-core/util/shallowEqual';
 import {registerControl} from '../../../factory';
 import ValidityLabel from '../../ValidityLabel';
 import createStateClassName from '../../../util/createStateClassName';
 
-export default class ColorControl extends Component {
+export default class ColorControl extends PureComponent {
 
     constructor(...args) {
         super(...args);
         this.onChange = this.onChange.bind(this);
-    }
-
-    shouldComponentUpdate(nextProps) {
-        return !shallowEqual(nextProps, this.props);
     }
 
     onChange({value}) {

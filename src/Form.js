@@ -3,12 +3,13 @@
  * @author leon <ludafa@outlook.com>
  */
 
-import React, {Component, PropTypes} from 'react';
+import React, {PureComponent} from 'react';
+import PropTypes from 'prop-types';
 import {Form} from 'melon-form';
 import {createUpload} from './util/createGetActions';
 import validator from './validator';
 
-export default class JSONSchemaForm extends Component {
+export default class JSONSchemaForm extends PureComponent {
 
     constructor(...args) {
         super(...args);

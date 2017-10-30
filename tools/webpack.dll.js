@@ -4,6 +4,7 @@
  */
 
 const webpack = require('webpack');
+const path = require('path');
 
 module.exports = {
 
@@ -39,28 +40,45 @@ module.exports = {
 
     output: {
         filename: '[name].dll.js',
-        path: 'asset',
+        path: path.join(__dirname, '../asset'),
         library: '[name]'
     },
 
+    devtool: 'eval-source-map',
+
     module: {
-        loaders: [{
+        rules: [{
             test: /\.js?$/,
-            loaders: [
-                'babel?cacheDirectory'
-            ],
+            loader: 'babel-loader',
             exclude: [
                 /node_modules/
             ]
         }, {
             test: /\.styl$/,
-            loaders: ['style', 'css', 'stylus?paths=node_modules&resolve url']
+            use: [
+                'style-loader',
+                'css-loader',
+                {
+                    loader: 'stylus-loader',
+                    options: {
+                        'paths': 'node_modules',
+                        'resolve url': true
+                    }
+                }
+            ]
         }, {
             test: /\.(svg|eot|ttf|woff|woff2|jpg|png)(\?.*)?$/,
-            loader: 'file?name=asset/[name].[ext]'
+            use: [
+                {
+                    loader: 'file-loader',
+                    options: {
+                        name: 'asset/[name].[ext]'
+                    }
+                }
+            ]
         }, {
             test: /\.json(\?.*)?$/,
-            loader: 'json'
+            loader: 'json-loader'
         }]
     },
 
@@ -74,7 +92,6 @@ module.exports = {
             // require function has been assigned to. This must match the
             // output.library option above
             name: '[name]'
-        }),
-        new webpack.optimize.OccurenceOrderPlugin()
+        })
     ]
 };

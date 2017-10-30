@@ -3,24 +3,19 @@
  * @author leon <ludafa@outlook.com>
  */
 
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import {registerControl} from '../../../factory';
-import shallowEqual from 'melon-core/util/shallowEqual';
 import TextBox from 'melon/TextBox';
 import ValidityLabel from '../../ValidityLabel';
 import createStateClassName from '../../../util/createStateClassName';
 
-export default class TextControl extends Component {
+export default class TextControl extends PureComponent {
 
     constructor(...args) {
         super(...args);
         this.onFocus = this.onFocus.bind(this);
         this.onBlur = this.onBlur.bind(this);
         this.onChange = this.onChange.bind(this);
-    }
-
-    shouldComponentUpdate(nextProps) {
-        return !shallowEqual(nextProps, this.props);
     }
 
     onFocus(e) {

@@ -3,24 +3,20 @@
  * @author leon <ludafa@outlook.com>
  */
 
-import React, {Component, PropTypes} from 'react';
+import React, {PureComponent} from 'react';
+import PropTypes from 'prop-types';
 import Toggle from 'melon/Toggle';
 import * as factory from '../../factory';
-import shallowEqual from 'melon-core/util/shallowEqual';
 import ValidityLabel from '../ValidityLabel';
 import createStateClassName from '../../util/createStateClassName';
 
 export const type = 'Boolean';
 
-export default class BooleanField extends Component {
+export default class BooleanField extends PureComponent {
 
     constructor(...args) {
         super(...args);
         this.onChange = this.onChange.bind(this);
-    }
-
-    shouldComponentUpdate(nextProps) {
-        return !shallowEqual(nextProps, this.props);
     }
 
     onChange({value}) {

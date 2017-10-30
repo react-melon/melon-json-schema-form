@@ -3,7 +3,8 @@
  * @author leon <ludafa@outlook.com>
  */
 
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import {getControl} from '../../factory';
 
 /* eslint-disable fecs-prefer-class */

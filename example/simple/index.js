@@ -5,44 +5,18 @@
 
 import ReactDOM from 'react-dom';
 import React from 'react';
-import {createStore, combineReducers, applyMiddleware, compose} from 'redux';
-import {Provider} from 'react-redux';
-import {fill, createReducer} from '../../src/index';
-
-import logger from 'redux-logger';
-import thunk from 'redux-thunk';
-
-import {model} from './constants';
-import schema from './schema';
 import App from './App';
+import {AppContainer} from 'react-hot-loader'
 
-import './index.styl';
+function render() {
+    ReactDOM.render(
+        <AppContainer><App/></AppContainer>,
+        document.querySelector('#app')
+    );
+}
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+render(App)
 
-let store = createStore(
-    combineReducers({
-        [model]: createReducer(
-            model,
-            fill({flow: '1000', cost: '0'}, schema)
-        )
-    }),
-    composeEnhancers(
-        applyMiddleware(
-            thunk,
-            logger({
-                collapsed: true,
-                logErrors: false
-            })
-        )
-    )
-);
-
-
-
-ReactDOM.render(
-    <Provider store={store}>
-        <App />
-    </Provider>,
-    document.querySelector('#app')
-);
+if (module.hot) {
+    module.hot.accept('./App', () => render(App))
+}

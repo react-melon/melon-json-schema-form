@@ -4,7 +4,7 @@
   "description": "melon json schema form",
   "main": "lib/index.js",
   "scripts": {
-    "start": "NODE_ENV=dev node tools/server.js",
+    "start": "NODE_ENV=dev webpack-dev-server --config tools/webpack.dev.js",
     "build": "rimraf lib && NODE_ENV=production gulp build",
     "lint": "fecs src",
     "test": "NODE_ENV=test karma start ./test/karma.local.conf.js",
@@ -28,44 +28,37 @@
     "src": "src"
   },
   "dependencies": {
-    "ajv": "^4.10.0",
+    "ajv": "^5.3.0",
     "ajv-i18n": "^1.3.0",
     "classnames": "^2.2.5",
     "kolor": "^1.1.9",
-    "melon": ">=0.5.10",
+    "melon": "0.6.0-0",
     "melon-calendar": ">=1.0.5",
     "melon-colorpicker": ">=1.2.0",
     "melon-form": ">=1.0.0-alpha.6",
     "melon-timepicker": ">=1.0.2",
     "moment": "^2.17.1",
-    "react": "^15.4.1",
-    "react-addons-update": "^0.14.8||^15.4.0",
-    "react-dom": "^15.4.1",
+    "prop-types": "^15.6.0",
+    "react-addons-update": "^15.6.2",
     "redux": "^3.6.0",
     "shallow-equal": "^1.0.0"
   },
   "devDependencies": {
+    "add-asset-html-webpack-plugin": "^2.1.2",
     "babel-istanbul": "^0.11.0",
-    "babel-loader": "^6.2.5",
-    "babel-plugin-external-helpers": "^6.8.0",
-    "babel-plugin-external-helpers-insert-require": "^1.0.0",
+    "babel-loader": "^7.1.2",
     "babel-plugin-istanbul": "^3.0.0",
-    "babel-plugin-transform-es2015-modules-umd": "^6.12.0",
-    "babel-plugin-transform-es3-member-expression-literals": "^6.8.0",
-    "babel-plugin-transform-es3-property-literals": "^6.8.0",
     "babel-plugin-transform-object-rest-spread": "^6.8.0",
-    "babel-plugin-transform-runtime": "^6.15.0",
     "babel-preset-es2015": "^6.14.0",
     "babel-preset-react": "^6.11.1",
     "babel-preset-stage-2": "^6.13.0",
     "babelify": "^7.3.0",
     "codemirror": "^5.19.0",
     "coveralls": "^2.11.12",
-    "css-loader": "^0.24.0",
+    "css-loader": "^0.28.7",
     "esdoc": "^0.4.8",
     "esdoc-es7-plugin": "0.0.3",
-    "express": "^4.14.0",
-    "extract-text-webpack-plugin": "^1.0.1",
+    "extract-text-webpack-plugin": "^3.0.2",
     "fecs": "^0.8.6",
     "file-loader": "^0.9.0",
     "gulp": "^3.9.1",
@@ -84,59 +77,24 @@
     "karma-coverage": "^1.1.1",
     "karma-firefox-launcher": "^1.0.0",
     "karma-jasmine": "^1.0.2",
-    "karma-webpack": "^1.8.0",
+    "karma-webpack": "^2.0.5",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
     "nib": "^1.1.2",
     "react-addons-test-utils": "^15.4.0",
-    "react-hot-loader": "^1.3.0",
+    "react-hot-loader": "^3.1.1",
     "react-redux": "^4.4.6",
     "redux": "^3.6.0",
     "redux-logger": "^2.7.4",
     "redux-thunk": "^2.1.0",
     "rimraf": "^2.5.4",
-    "style-loader": "^0.13.1",
+    "style-loader": "^0.19.0",
     "stylus": "^0.54.5",
-    "stylus-loader": "^2.3.1",
+    "stylus-loader": "^3.0.1",
     "watchify": "^3.7.0",
-    "webpack": "^1.13.1",
+    "webpack": "^3.8.1",
     "webpack-dev-middleware": "^1.8.3",
+    "webpack-dev-server": "^2.9.3",
     "webpack-hot-middleware": "^2.12.2"
-  },
-  "babel": {
-    "env": {
-      "dev": {
-        "presets": [
-          "es2015",
-          "stage-2",
-          "react"
-        ]
-      },
-      "test": {
-        "presets": [
-          "es2015",
-          "stage-2",
-          "react"
-        ],
-        "plugins": [
-          "istanbul"
-        ]
-      },
-      "production": {
-        "presets": [
-          [
-            "es2015",
-            {
-              "loose": true,
-              "modules": "umd"
-            }
-          ],
-          "stage-2",
-          "react"
-        ],
-        "plugins": [
-          "transform-es3-property-literals",
-          "transform-es3-member-expression-literals"
-        ]
-      }
-    }
   }
 }

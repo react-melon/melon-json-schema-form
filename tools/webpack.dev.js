@@ -9,15 +9,21 @@ const webpack = require('webpack');
 const path = require('path');
 const fs = require('fs');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
+const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 
-const pages = ['simple', 'dynamic'];
+const pages = [
+    // 'dynamic',
+    'simple'
+];
 
 const config = {
 
     entry: pages.reduce(
         (conf, name) => {
-            conf[name] = path.join(__dirname, `../example/${name}/index.js`);
+            conf[name] = [
+                'react-hot-loader/patch',
+                path.join(__dirname, `../example/${name}/index.js`)
+            ];
             return conf;
         },
         {}
@@ -26,29 +32,48 @@ const config = {
     module: {
         loaders: [
             {
-                test: /\.js?$/,
-                loaders: [
-                    'babel?cacheDirectory'
-                ],
-                exclude: [
-                    /node_modules\/(?!(melon-form)\/).*/
-                ]
+                test: /\.js$/,
+                loader: 'babel-loader',
+                exclude: [/node_modules/]
             },
             {
                 test: /\.styl$/,
-                loaders: ['style', 'css', 'stylus?paths=node_modules&resolve url&include css']
+                use: [
+                    'style-loader',
+                    'css-loader',
+                    {
+                        loader: 'stylus-loader',
+                        options: {
+                            'paths': [
+                                path.join(__dirname, '../node_modules')
+                            ],
+                            'resolve url': true,
+                            'include css': true
+                        }
+                    }
+                ]
             },
             {
                 test: /\.(svg|eot|ttf|woff|woff2|jpg|png)(\?.*)?$/,
-                loader: 'file?name=asset/[name].[ext]'
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: 'asset/[name].[ext]'
+                        }
+                    }
+                ]
             },
             {
                 test: /\.json(\?.*)?$/,
-                loader: 'json'
+                loader: 'json-loader'
             },
             {
                 test: /\.css$/,
-                loader: 'style!css'
+                use: [
+                    'style-loader',
+                    'css-loader'
+                ]
             }
         ]
     },
@@ -61,16 +86,18 @@ const config = {
 
     cache: false,
 
-    debug: true,
-
     devtool: 'eval-source-map',
+
+    devServer: {
+        hot: true
+    },
 
     plugins: [
         new webpack.DllReferencePlugin({
-            context: '.',
+            context: path.join(__dirname, '..'),
             manifest: require('../asset/inf-manifest.json')
         }),
-        new webpack.optimize.OccurenceOrderPlugin(),
+        new webpack.NamedModulesPlugin(),
         new webpack.HotModuleReplacementPlugin(),
         ...pages.map(page => new HtmlWebpackPlugin({
             inject: true,
@@ -88,12 +115,15 @@ const config = {
             filename: path.resolve(__dirname, `../asset/${page}.html`),
             alwaysWriteToDisk: true
         })),
+        new AddAssetHtmlPlugin({
+            filepath: path.resolve(__dirname, '../asset/*.dll.js'),
+            includeSourcemap: false
+        }),
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: '"dev"'
             }
-        }),
-        new HtmlWebpackHarddiskPlugin()
+        })
     ]
 
 };

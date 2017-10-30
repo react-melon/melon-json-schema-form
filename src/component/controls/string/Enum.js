@@ -3,18 +3,14 @@
  * @author leon <ludafa@outlook.com>
  */
 
-import React, {Component, PropTypes} from 'react';
+import React, {PureComponent} from 'react';
+import PropTypes from 'prop-types';
 import Select from 'melon/Select';
-import shallowEqual from 'melon-core/util/shallowEqual';
 import ValidityLabel from '../../ValidityLabel';
 import {registerControl} from '../../../factory';
 import createStateClassName from '../../../util/createStateClassName';
 
-export default class EnumTextField extends Component {
-
-    shouldComponentUpdate(nextProps) {
-        return !shallowEqual(nextProps, this.props);
-    }
+export default class EnumTextField extends PureComponent {
 
     render() {
 
