@@ -60,7 +60,7 @@ export default class EnumTextField extends Component {
                 {
                     description
                         ? <p
-                            className="ui-control-enum-decription">
+                            className="ui-control-enum-description">
                             {description}
                         </p>
                         : null
