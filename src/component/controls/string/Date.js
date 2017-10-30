@@ -3,7 +3,8 @@
  * @author leon <ludafa@outlook.com>
  */
 
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import Calendar from 'melon-calendar';
 import {registerControl} from '../../../factory';
 import ValidityLabel from '../../ValidityLabel';

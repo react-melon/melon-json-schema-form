@@ -9,19 +9,18 @@ const webpack = require('webpack');
 const path = require('path');
 const fs = require('fs');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
-
-const pages = ['simple', 'dynamic'];
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
+const pages = [
+    // 'dynamic',
+    'simple'
+];
 
 const config = {
 
-    entry: pages.reduce(
-        (conf, name) => {
-            conf[name] = path.join(__dirname, `../example/${name}/index.js`);
-            return conf;
-        },
-        {}
-    ),
+    entry: {
+        index: path.join(__dirname, '../example/simple/index.js')
+    },
 
     module: {
         loaders: [
@@ -36,7 +35,10 @@ const config = {
             },
             {
                 test: /\.styl$/,
-                loaders: ['style', 'css', 'stylus?paths=node_modules&resolve url&include css']
+                loader: ExtractTextPlugin.extract([
+                    'css',
+                    'stylus?paths=node_modules&resolve url&include css'
+                ])
             },
             {
                 test: /\.(svg|eot|ttf|woff|woff2|jpg|png)(\?.*)?$/,
@@ -61,8 +63,6 @@ const config = {
 
     cache: false,
 
-    debug: true,
-
     devtool: 'eval-source-map',
 
     plugins: [
@@ -70,32 +70,25 @@ const config = {
             context: '.',
             manifest: require('../asset/inf-manifest.json')
         }),
-        new webpack.optimize.OccurenceOrderPlugin(),
-        new webpack.HotModuleReplacementPlugin(),
-        ...pages.map(page => new HtmlWebpackPlugin({
-            inject: true,
-            chunks: [page],
-            templateContent: (function () {
-                return fs
-                    .readFileSync(
-                        path.join(__dirname, `../example/${page}/index.html`),
-                        'utf8'
-                    )
-                    .replace(/<!--@inject=([\w._-]+)-->/ig, function ($0, $1) {
-                        return `<script src="${$1}"></script>`;
-                    });
-            })(),
-            filename: path.resolve(__dirname, `../asset/${page}.html`),
-            alwaysWriteToDisk: true
-        })),
+        new HtmlWebpackPlugin({
+            template: path.join(__dirname, '../example/simple/index.html')
+        }),
+        new AddAssetHtmlPlugin({
+            filepath: require.resolve('../asset/inf.dll'),
+            includeSourcemap: false
+        }),
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: '"dev"'
             }
         }),
-        new HtmlWebpackHarddiskPlugin()
-    ]
-
+        new ExtractTextPlugin('styles.css')
+    ],
+    devServer: {
+        port: 8080
+    }
 };
+
+console.log(require.resolve('../asset/inf.dll'));
 
 module.exports = config;

@@ -3,7 +3,8 @@
  * @author leon <ludafa@outlook.com>
  */
 
-import React, {Component, PropTypes} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import Select from 'melon/Select';
 import shallowEqual from 'melon-core/util/shallowEqual';
 import ValidityLabel from '../../ValidityLabel';

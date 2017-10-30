@@ -5,7 +5,8 @@
 
 import {model} from './constants';
 import {Form, ObjectControl} from '../../src/index';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 /* eslint-disable fecs-prefer-class */
 /**
