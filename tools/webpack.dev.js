@@ -23,34 +23,44 @@ const config = {
     },
 
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.js?$/,
-                loaders: [
-                    'babel?cacheDirectory'
-                ],
-                exclude: [
-                    /node_modules\/(?!(melon-form)\/).*/
-                ]
+                use: 'babel-loader',
+                exclude: [/node_modules/]
             },
             {
                 test: /\.styl$/,
-                loader: ExtractTextPlugin.extract([
-                    'css',
-                    'stylus?paths=node_modules&resolve url&include css'
-                ])
+                use: ExtractTextPlugin.extract({
+                    use: [
+                        'css-loader',
+                        {
+                            loader: 'stylus-loader',
+                            options: {
+                                'paths': 'node_modules',
+                                'resolve url': 1,
+                                'include css': 1
+                            }
+                        }
+                    ]
+                })
             },
             {
                 test: /\.(svg|eot|ttf|woff|woff2|jpg|png)(\?.*)?$/,
-                loader: 'file?name=asset/[name].[ext]'
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {name: 'asset/[name].[ext]'}
+                    }
+                ]
             },
             {
                 test: /\.json(\?.*)?$/,
-                loader: 'json'
+                use: 'json-loader'
             },
             {
                 test: /\.css$/,
-                loader: 'style!css'
+                use: ['style-loader', 'css-loader']
             }
         ]
     },
