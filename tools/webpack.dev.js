@@ -9,8 +9,8 @@ const webpack = require('webpack');
 const path = require('path');
 const fs = require('fs');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
-
 const pages = [
     // 'dynamic',
     'simple'
@@ -18,62 +18,39 @@ const pages = [
 
 const config = {
 
-    entry: pages.reduce(
-        (conf, name) => {
-            conf[name] = [
-                'react-hot-loader/patch',
-                path.join(__dirname, `../example/${name}/index.js`)
-            ];
-            return conf;
-        },
-        {}
-    ),
+    entry: {
+        index: path.join(__dirname, '../example/simple/index.js')
+    },
 
     module: {
         loaders: [
             {
-                test: /\.js$/,
-                loader: 'babel-loader',
-                exclude: [/node_modules/]
+                test: /\.js?$/,
+                loaders: [
+                    'babel?cacheDirectory'
+                ],
+                exclude: [
+                    /node_modules\/(?!(melon-form)\/).*/
+                ]
             },
             {
                 test: /\.styl$/,
-                use: [
-                    'style-loader',
-                    'css-loader',
-                    {
-                        loader: 'stylus-loader',
-                        options: {
-                            'paths': [
-                                path.join(__dirname, '../node_modules')
-                            ],
-                            'resolve url': true,
-                            'include css': true
-                        }
-                    }
-                ]
+                loader: ExtractTextPlugin.extract([
+                    'css',
+                    'stylus?paths=node_modules&resolve url&include css'
+                ])
             },
             {
                 test: /\.(svg|eot|ttf|woff|woff2|jpg|png)(\?.*)?$/,
-                use: [
-                    {
-                        loader: 'file-loader',
-                        options: {
-                            name: 'asset/[name].[ext]'
-                        }
-                    }
-                ]
+                loader: 'file?name=asset/[name].[ext]'
             },
             {
                 test: /\.json(\?.*)?$/,
-                loader: 'json-loader'
+                loader: 'json'
             },
             {
                 test: /\.css$/,
-                use: [
-                    'style-loader',
-                    'css-loader'
-                ]
+                loader: 'style!css'
             }
         ]
     },
@@ -88,44 +65,30 @@ const config = {
 
     devtool: 'eval-source-map',
 
-    devServer: {
-        hot: true
-    },
-
     plugins: [
         new webpack.DllReferencePlugin({
-            context: path.join(__dirname, '..'),
+            context: '.',
             manifest: require('../asset/inf-manifest.json')
         }),
-        new webpack.NamedModulesPlugin(),
-        new webpack.HotModuleReplacementPlugin(),
-        ...pages.map(page => new HtmlWebpackPlugin({
-            inject: true,
-            chunks: [page],
-            templateContent: (function () {
-                return fs
-                    .readFileSync(
-                        path.join(__dirname, `../example/${page}/index.html`),
-                        'utf8'
-                    )
-                    .replace(/<!--@inject=([\w._-]+)-->/ig, function ($0, $1) {
-                        return `<script src="${$1}"></script>`;
-                    });
-            })(),
-            filename: path.resolve(__dirname, `../asset/${page}.html`),
-            alwaysWriteToDisk: true
-        })),
+        new HtmlWebpackPlugin({
+            template: path.join(__dirname, '../example/simple/index.html')
+        }),
         new AddAssetHtmlPlugin({
-            filepath: path.resolve(__dirname, '../asset/*.dll.js'),
+            filepath: require.resolve('../asset/inf.dll'),
             includeSourcemap: false
         }),
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: '"dev"'
             }
-        })
-    ]
-
+        }),
+        new ExtractTextPlugin('styles.css')
+    ],
+    devServer: {
+        port: 8080
+    }
 };
+
+console.log(require.resolve('../asset/inf.dll'));
 
 module.exports = config;

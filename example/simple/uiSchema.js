@@ -24,12 +24,5 @@ export default {
                 }
             }
         }
-    },
-    address: {
-        2: {
-            $control(props) {
-                return <div>haha</div>;
-            }
-        }
     }
 };

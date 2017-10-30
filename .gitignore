@@ -31,3 +31,6 @@ dep
 
 # webpack dll asset
 asset
+
+# compile results
+lib

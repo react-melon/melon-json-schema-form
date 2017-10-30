@@ -1,2 +1,11 @@
 node_module
 dep
+package-lock.json
+gulpfile.js
+.editorconfig
+.gitignore
+bower.json
+tools
+example
+asset
+test

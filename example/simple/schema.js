@@ -3,6 +3,8 @@
  * @author leon <ludafa@outlook.com>
  */
 
+
+
 export default {
     type: 'object',
     required: [
@@ -61,15 +63,18 @@ export default {
             items: [
                 {
                     type: 'string',
-                    title: '街道'
+                    title: '城市',
+                    default: '北京'
                 },
                 {
                     type: 'string',
-                    title: '城市'
+                    title: '省份',
+                    default: '北京'
                 },
                 {
                     type: 'string',
-                    title: '国家'
+                    title: '国家',
+                    default: '中国'
                 }
             ]
         },
@@ -195,10 +200,7 @@ export default {
                     url: {
                         type: 'string',
                         title: '兑奖地址',
-                        format: 'uri',
-                        relations: [{
-                            type: 'nuomi'
-                        }]
+                        format: 'uri'
                     },
                     number: {
                         title: '中奖放发金币数量',
@@ -206,41 +208,26 @@ export default {
                         format: 'numeric',
                         formatMaximum: '20',
                         formatMinimum: '0',
-                        step: 1,
-                        relations: [{
-                            type: 'coin'
-                        }]
+                        step: 1
                     },
                     goodsInfo: {
                         title: '语音权益商品',
                         type: 'string',
                         media: {
                             type: 'userrights/goods'
-                        },
-                        relations: [{
-                            type: 'userrights'
-                        }]
+                        }
                     },
                     amount: {
                         type: 'string',
                         format: 'numeric',
                         title: '奖品数量',
-                        formatMinimum: '0',
-                        relations: [{
-                            type: 'default',
-                            method: 'not'
-                        }]
+                        formatMinimum: '0'
                     },
                     maxWinTimes: {
                         type: 'string',
                         format: 'numeric',
                         formatMinimum: '0',
-                        title: '中奖次数上限',
-                        hide: 0,
-                        relations: [{
-                            type: 'default',
-                            method: 'not'
-                        }]
+                        title: '中奖次数上限'
                     }
                 }
             }
