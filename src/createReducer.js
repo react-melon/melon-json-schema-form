@@ -23,7 +23,20 @@ export default (model, initialValue, reducers) => createReducer(
             if (value === '') {
                 return update(state, {
                     value: {
-                        $set: dataPath.deleteIn(state.value, name)
+                        $apply(value) {
+                            let path = dataPath.parse(name);
+                            // 把路径的上一层取出来看看是不是数组
+                            // 如果是数组就直接设置，不是数组就干掉这个 key
+                            return Array
+                                .isArray(
+                                    dataPath.getIn(
+                                        value,
+                                        path.slice(0, -1).join('.')
+                                    )
+                                )
+                                ? dataPath.setIn(value, name)
+                                : dataPath.deleteIn(value, name)
+                        }
                     }
                 });
             }

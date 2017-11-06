@@ -62,7 +62,6 @@ export default function Tuple(props) {
                     )
                     : null
             }
-            <Validity {...meta} />
             <ol className="ui-field-content">
                 {items.map((item, index) => {
                     const key = `${name}[${index}]`;
@@ -80,6 +79,7 @@ export default function Tuple(props) {
                     );
                 })}
             </ol>
+            <Validity {...meta} />
         </div>
     );
 
