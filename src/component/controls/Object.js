@@ -3,15 +3,15 @@
  * @author leon(ludafa@outlook.com)
  */
 
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import PropTypes from 'prop-types';
 import {registerControl} from '../../factory';
-import shallowEqual from 'melon-core/util/shallowEqual';
 import Control from './Control';
 import Field from '../Field';
 import {getOrderedKeys} from '../../util/getOrderedKeys';
 import {format} from '../../util/field';
 import cx from 'classnames';
+import ValidityLabel from '../ValidityLabel';
 
 /**
  * ObjectControl
@@ -19,11 +19,7 @@ import cx from 'classnames';
  * @class
  * @param {*} props 属性
  */
-export default class ObjectControl extends Component {
-
-    shouldComponentUpdate(nextProps) {
-        return !shallowEqual(this.props, nextProps);
-    }
+export default class ObjectControl extends PureComponent {
 
     render() {
 
@@ -99,6 +95,7 @@ export default class ObjectControl extends Component {
                 <div className="ui-control-object-content">
                     {fields}
                 </div>
+                <ValidityLabel {...meta} />
             </div>
         );
 

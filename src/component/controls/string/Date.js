@@ -3,14 +3,15 @@
  * @author leon <ludafa@outlook.com>
  */
 
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import PropTypes from 'prop-types';
+
 import Calendar from 'melon-calendar';
 import {registerControl} from '../../../factory';
 import ValidityLabel from '../../ValidityLabel';
 import createStateClassName from '../../../util/createStateClassName';
 
-export default class DateControl extends Component {
+export default class DateControl extends PureComponent {
 
     constructor(...args) {
         super(...args);

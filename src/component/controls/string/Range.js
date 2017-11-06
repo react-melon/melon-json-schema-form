@@ -3,19 +3,14 @@
  * @author leon <ludafa@outlook.com>
  */
 
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import PropTypes from 'prop-types';
 import Slider from 'melon/Slider';
 import {registerControl} from '../../../factory';
-import shallowEqual from 'melon-core/util/shallowEqual';
 import ValidityLabel from '../../ValidityLabel';
 import createStateClassName from '../../../util/createStateClassName';
 
-export default class Range extends Component {
-
-    shouldComponentUpdate(nextProps) {
-        return !shallowEqual(nextProps, this.props);
-    }
+export default class Range extends PureComponent {
 
     render() {
 

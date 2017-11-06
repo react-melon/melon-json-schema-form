@@ -1,22 +1,40 @@
 /**
- * @file AwardControl
- * @author leon <ludafa@outlook.com>
+ * @file Award
+ * @author leon <lupengyu@baidu.com>
  */
 
 import React from 'react';
-import {ObjectControl} from '../../../src/index';
+import {Field, ObjectControl} from '../../../src/index';
 
 function getConditionalFields(type) {
 
+    const BASE_FIELDS = [
+        'amount',
+        'maxWinTimes'
+    ];
+
     switch (type) {
-        case 'nuomi':
-            return ['amount', 'maxWinTimes', 'url'];
+        case 'nuomiSeller':
+            return [
+                ...BASE_FIELDS,
+                'url',
+                'sourceType',
+                'appId'
+            ];
         case 'userrights':
-            return ['amount', 'maxWinTimes', 'goodsInfo'];
+            return [
+                ...BASE_FIELDS,
+                'goodsInfo',
+                'sync',
+                'sourceType',
+                'appId'
+            ];
         case 'coin':
-            return ['amount', 'maxWinTimes', 'number'];
-        case 'default':
-        default:
+            return [
+                ...BASE_FIELDS,
+                'number'
+            ];
+        case 'default': default:
             return [];
     }
 
@@ -47,13 +65,7 @@ function getSchema(value, schema) {
 
 }
 
-/**
- * 奖品控件
- *
- * @class
- * @param {Object} props 属性
- */
-export default function AwardControl(props) {
+function AwardControl(props) {
 
     const {
         schema,
@@ -67,8 +79,24 @@ export default function AwardControl(props) {
     return (
         <ObjectControl
             {...rest}
-            uiSchema={{...uiSchema, $control: null}}
+            uiSchema={uiSchema}
             schema={conditionalSchema} />
+    );
+
+}
+
+export default function AwardField(props) {
+
+    const {
+        uiSchema,
+        ...rest
+    } = props;
+
+    return (
+        <Field
+            {...rest}
+            uiSchema={{...uiSchema, $control: null}}
+            control={AwardControl} />
     );
 
 }

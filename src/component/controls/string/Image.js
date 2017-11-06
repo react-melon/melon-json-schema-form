@@ -3,19 +3,14 @@
  * @author leon <ludafa@outlook.com>
  */
 
-import React, {Component} from 'react';
+import React, {PureComponent} from 'react';
 import PropTypes from 'prop-types';
 import Uploader from 'melon/Uploader';
-import shallowEqual from 'melon-core/util/shallowEqual';
 import {registerControl} from '../../../factory';
 import ValidityLabel from '../../ValidityLabel';
 import createStateClassName from '../../../util/createStateClassName';
 
-export default class Image extends Component {
-
-    shouldComponentUpdate(nextProps) {
-        return !shallowEqual(nextProps, this.props);
-    }
+export default class Image extends PureComponent {
 
     render() {
 
