@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "start": "NODE_ENV=dev webpack-dev-server --config tools/webpack.dev.js",
-    "build": "rimraf lib && NODE_ENV=production gulp build",
+    "build": "rimraf lib && NODE_ENV=production gulp",
     "lint": "fecs src",
     "test": "NODE_ENV=test karma start ./test/karma.local.conf.js",
     "test-ci": "NODE_ENV=test karma start ./test/karma.travis.conf.js",
@@ -61,7 +61,7 @@
     "extract-text-webpack-plugin": "^3.0.2",
     "fecs": "^0.8.6",
     "file-loader": "^0.9.0",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.2",
     "gulp-babel": "^6.1.2",
     "gulp-babel-external-helpers": "^2.0.2",
     "gulp-clean": "^0.3.2",

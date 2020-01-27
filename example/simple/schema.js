@@ -121,7 +121,6 @@ export default {
         awardList: {
             type: 'array',
             title: '抽奖礼物配置',
-            minItems: 1,
             items: {
                 type: 'object',
                 media: {

@@ -222,7 +222,7 @@ export default class VariableArray extends PureComponent {
 
         const {
             items,
-            minItems = 1,
+            minItems = 0,
             maxItems = Number.MAX_VALUE,
             title,
             description
