@@ -67,6 +67,7 @@ export default class EnumTextField extends PureComponent {
                     variants={['fluid']}
                     name={name}
                     states={{valid}}
+                    maxHeight={300}
                     value={value == null ? schema.defaultValue : value}
                     onChange={e => {
                         actions.change(name, e.value);
